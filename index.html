@@ -1,26 +1,246 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Rotation Helper</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
-    </head>
-    <body>        
-        <script src="" async defer>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volleyball Rotation Tool</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>🏐 Volleyball Rotation Tool</h1>
+        <p>5–1 & 6–2 Rotation Guide, Lineups, Libero & Score Tracker</p>
+    </header>
+
+    <main>
+
+        <!-- MENU -->
+        <section id="menu" class="card">
+            <h2>What would you like to do?</h2>
+
+            <button onclick="showRotationSetup()">
+                🔄 Learn the Rotations
+            </button>
+
+            <button onclick="showPlayerSetup()">
+                👥 Enter Players
+            </button>
+
+            <button onclick="showScoreTracker()">
+                🏆 Keep Score
+            </button>
+        </section>
 
 
-        </script>
-        <h1>Volleyball Rotations</h1>
-        <h2>Manage lineups and learn the positions.</h2>
-        <button></button>
-        
-    </body>
+        <!-- SYSTEM SETUP -->
+        <section id="systemSetup" class="card hidden">
+
+            <h2>Select Your Offensive System</h2>
+
+            <button onclick="selectSystem(5)">
+                5–1 System
+            </button>
+
+            <button onclick="selectSystem(6)">
+                6–2 System
+            </button>
+
+            <button class="secondary" onclick="goHome()">
+                ← Back
+            </button>
+
+        </section>
+
+
+        <!-- ROTATION SETUP -->
+        <section id="rotationSetup" class="card hidden">
+
+            <h2>Rotation Guide</h2>
+
+            <label for="setterPosition">
+                Enter the court position of one of the setters:
+            </label>
+
+            <select id="setterPosition">
+                <option value="1">Position 1</option>
+                <option value="2">Position 2</option>
+                <option value="3">Position 3</option>
+                <option value="4">Position 4</option>
+                <option value="5">Position 5</option>
+                <option value="6">Position 6</option>
+            </select>
+
+            <button onclick="startRotation()">
+                Start Rotation
+            </button>
+
+            <button class="secondary" onclick="goHome()">
+                ← Back
+            </button>
+
+        </section>
+
+
+        <!-- PLAYER SETUP -->
+        <section id="playerSetup" class="card hidden">
+
+            <h2>Enter Players</h2>
+
+            <p id="playerSystemText"></p>
+
+            <div id="playerInputs"></div>
+
+            <button onclick="savePlayers()">
+                Save Players
+            </button>
+
+            <button class="secondary" onclick="goHome()">
+                ← Back
+            </button>
+
+        </section>
+
+
+        <!-- ROTATION DISPLAY -->
+        <section id="rotationDisplay" class="card hidden">
+
+            <h2 id="rotationTitle">Starting Rotation</h2>
+
+            <div id="court" class="court">
+
+                <!-- Front row -->
+                <div class="court-position front pos4" id="pos4">
+                </div>
+
+                <div class="court-position front pos3" id="pos3">
+                </div>
+
+                <div class="court-position front pos2" id="pos2">
+                </div>
+
+                <!-- Back row -->
+                <div class="court-position back pos5" id="pos5">
+                </div>
+
+                <div class="court-position back pos6" id="pos6">
+                </div>
+
+                <div class="court-position back pos1" id="pos1">
+                </div>
+
+            </div>
+
+            <div class="rotation-info">
+                <p id="rotationNumber"></p>
+                <p id="liberoStatus"></p>
+            </div>
+
+            <div class="button-row">
+                <button onclick="rotatePlayers()">
+                    🔄 Rotate
+                </button>
+
+                <button class="secondary" onclick="goHome()">
+                    ← Home
+                </button>
+            </div>
+
+        </section>
+
+
+        <!-- SCORE TRACKER -->
+        <section id="scoreTracker" class="card hidden">
+
+            <h2>🏆 Match Score</h2>
+
+            <div class="team-names">
+
+                <div>
+                    <label for="teamAName">Team A</label>
+                    <input
+                        type="text"
+                        id="teamAName"
+                        value="Team A"
+                    >
+                </div>
+
+                <div>
+                    <label for="teamBName">Team B</label>
+                    <input
+                        type="text"
+                        id="teamBName"
+                        value="Team B"
+                    >
+                </div>
+
+            </div>
+
+            <div class="scoreboard">
+
+                <div class="score-team">
+                    <h3 id="scoreTeamA">Team A</h3>
+                    <div id="teamAScore">0</div>
+
+                    <button onclick="addPoint('A')">
+                        + Point
+                    </button>
+                </div>
+
+                <div class="score-team">
+                    <h3 id="scoreTeamB">Team B</h3>
+                    <div id="teamBScore">0</div>
+
+                    <button onclick="addPoint('B')">
+                        + Point
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="match-info">
+
+                <p>
+                    <strong>Serving:</strong>
+                    <span id="servingTeam">Team A</span>
+                </p>
+
+                <p>
+                    <strong>Sets:</strong>
+                    <span id="setsScore">0 - 0</span>
+                </p>
+
+                <p>
+                    <strong>Set:</strong>
+                    <span id="currentSet">1</span>
+                </p>
+
+            </div>
+
+            <div id="setMessage"></div>
+
+            <button class="secondary" onclick="resetSet()">
+                Reset Current Set
+            </button>
+
+            <button class="danger" onclick="resetMatch()">
+                Reset Match
+            </button>
+
+            <button class="secondary" onclick="goHome()">
+                ← Home
+            </button>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Volleyball Rotation Tool</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
 </html>
-
