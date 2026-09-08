@@ -1,1 +1,297 @@
 
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f5f7;
+    color: #222;
+}
+
+header {
+    background: #222;
+    color: white;
+    text-align: center;
+    padding: 25px 15px;
+}
+
+header h1 {
+    margin: 0 0 8px;
+}
+
+header p {
+    margin: 0;
+    opacity: 0.8;
+}
+
+main {
+    width: min(900px, 95%);
+    margin: 30px auto;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+}
+
+.hidden {
+    display: none;
+}
+
+h2 {
+    text-align: center;
+    margin-top: 0;
+}
+
+button {
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    margin: 12px auto;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #333;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+button.secondary {
+    background: #777;
+}
+
+button.danger {
+    background: #a33;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #bbb;
+    border-radius: 7px;
+    font-size: 16px;
+}
+
+
+/* PLAYER INPUTS */
+
+.player-input {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.player-input input {
+    margin: 0;
+}
+
+
+/* COURT */
+
+.court {
+    position: relative;
+    width: 100%;
+    max-width: 650px;
+    height: 500px;
+    margin: 30px auto;
+    background: #d6d6d6;
+    border: 5px solid #222;
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+
+    gap: 4px;
+    padding: 4px;
+}
+
+.court::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    border-top: 5px solid #222;
+}
+
+.court-position {
+    background: white;
+    border: 2px solid #222;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 1;
+}
+
+.pos4 {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.pos3 {
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.pos2 {
+    grid-column: 3;
+    grid-row: 1;
+}
+
+.pos5 {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.pos6 {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.pos1 {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.position-number {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.player-name {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.jersey-number {
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.role {
+    font-size: 13px;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+.libero {
+    border: 4px solid #555;
+}
+
+
+/* ROTATION INFORMATION */
+
+.rotation-info {
+    text-align: center;
+    font-size: 17px;
+}
+
+#liberoStatus {
+    font-weight: bold;
+}
+
+
+/* SCOREBOARD */
+
+.team-names {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.scoreboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-top: 25px;
+}
+
+.score-team {
+    text-align: center;
+    padding: 25px;
+    border: 2px solid #ccc;
+    border-radius: 12px;
+}
+
+.score-team h3 {
+    margin-top: 0;
+}
+
+.score-team div {
+    font-size: 70px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.match-info {
+    text-align: center;
+    font-size: 18px;
+    margin: 25px 0;
+}
+
+#setMessage {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 20px;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #777;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .card {
+        padding: 20px;
+    }
+
+    .court {
+        height: 400px;
+    }
+
+    .player-input {
+        grid-template-columns: 1fr;
+    }
+
+    .team-names,
+    .scoreboard {
+        grid-template-columns: 1fr;
+    }
+
+    .score-team div {
+        font-size: 55px;
+    }
+
+}
