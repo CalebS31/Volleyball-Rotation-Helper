@@ -1,4 +1,3 @@
-
 // ============================================
 // VOLLEYBALL ROTATION TOOL
 // ============================================
@@ -54,22 +53,10 @@ let libero = {
 
 let courtPlayers = [];
 
-let rotationNumber = 1;
-
 
 // --------------------------------------------
 // LIBERO STATE
 // --------------------------------------------
-
-// This is the important change from the Python version.
-//
-// Instead of putting the libero into the array as
-// player #7, we keep track of:
-//
-// 1. Which middle player was replaced
-// 2. Whether the libero is currently on court
-//
-// This makes rotations much easier to manage.
 
 let liberoState = {
     active: false,
@@ -289,8 +276,6 @@ function startRotation() {
         courtPlayers.push(index);
     }
 
-    rotationNumber = 1;
-
     liberoState.active = false;
     liberoState.replacedMiddle = null;
 
@@ -422,8 +407,6 @@ function rotatePlayers() {
 
     courtPlayers.push(firstPlayer);
 
-    rotationNumber++;
-
     updateLibero();
 
     displayCourt();
@@ -515,9 +498,52 @@ function displayCourt() {
     }
 
 
-    document.getElementById("rotationNumber").textContent =
-        `Rotation ${rotationNumber}`;
+    // ----------------------------------------
+    // FIND CURRENT SETTER POSITION
+    // ----------------------------------------
 
+    /*
+        5–1 has one setter.
+        6–2 has two setters.
+
+        Find all setter players, then determine
+        which setter is currently on the court
+        and their current court position.
+    */
+
+    const setterIndexes = positions
+        .map((role, index) => {
+
+            if (
+                role === "Setter" ||
+                role === "Setter 1" ||
+                role === "Setter 2"
+            ) {
+                return index;
+            }
+
+            return -1;
+        })
+        .filter(index => index !== -1);
+
+
+    const setterCourtIndex =
+        courtPlayers.findIndex(playerIndex =>
+            setterIndexes.includes(playerIndex)
+        );
+
+
+    const setterPosition =
+        setterCourtIndex + 1;
+
+
+    document.getElementById("rotationNumber").textContent =
+        `Rotation — Setter Position ${setterPosition}`;
+
+
+    // ----------------------------------------
+    // LIBERO STATUS
+    // ----------------------------------------
 
     if (liberoState.active) {
 
@@ -535,7 +561,7 @@ function displayCourt() {
 
 
     // ----------------------------------------
-    // Rotation title
+    // ROTATION TITLE
     // ----------------------------------------
 
     document.getElementById("rotationTitle").textContent =
