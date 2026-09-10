@@ -1,297 +1,910 @@
+/* =========================================
+   VOLLEYBALL ROTATION TOOL
+   VERSION 1.1
+   ========================================= */
+
 
 * {
     box-sizing: border-box;
 }
 
+
+html,
 body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f3f5f7;
+    padding: 0;
+    min-height: 100%;
+}
+
+
+body {
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #f1f3f5;
     color: #222;
 }
 
-header {
-    background: #222;
+
+/* =========================================
+   HEADER
+   ========================================= */
+
+.top-bar {
+    min-height: 80px;
+
+    padding: 15px 25px;
+
+    background: #181818;
     color: white;
-    text-align: center;
-    padding: 25px 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
 }
 
-header h1 {
-    margin: 0 0 8px;
-}
 
-header p {
+.top-bar h1 {
     margin: 0;
-    opacity: 0.8;
+
+    font-size: 25px;
 }
+
+
+.top-bar p {
+    margin: 4px 0 0;
+
+    opacity: 0.75;
+}
+
+
+.version {
+    font-weight: bold;
+
+    padding: 8px 12px;
+
+    border: 1px solid #777;
+
+    border-radius: 7px;
+}
+
+
+/* =========================================
+   GENERAL
+   ========================================= */
 
 main {
-    width: min(900px, 95%);
-    margin: 30px auto;
+    width: 100%;
+
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    padding: 30px 20px;
 }
 
-.card {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 25px;
-}
 
 .hidden {
-    display: none;
+    display: none !important;
 }
+
+
+.screen {
+    width: 100%;
+}
+
+
+.menu-card,
+.setup-card {
+    max-width: 600px;
+
+    margin: 40px auto;
+
+    padding: 35px;
+
+    background: white;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.12);
+}
+
 
 h2 {
-    text-align: center;
     margin-top: 0;
+
+    text-align: center;
 }
 
+
 button {
-    display: block;
-    width: 100%;
-    max-width: 500px;
-    margin: 12px auto;
-    padding: 14px 20px;
     border: none;
-    border-radius: 8px;
-    background: #333;
-    color: white;
+
+    border-radius: 9px;
+
+    padding: 14px 20px;
+
     font-size: 16px;
+
+    font-weight: bold;
+
     cursor: pointer;
-    transition: 0.2s;
+
+    transition:
+        transform 0.15s,
+        opacity 0.15s;
 }
+
 
 button:hover {
     transform: translateY(-2px);
+
     opacity: 0.9;
 }
 
-button.secondary {
-    background: #777;
+
+button:active {
+    transform: scale(0.97);
 }
 
-button.danger {
-    background: #a33;
+
+.menu-button,
+.main-button {
+    display: block;
+
+    width: 100%;
+
+    margin: 15px 0;
+
+    background: #222;
+
+    color: white;
 }
+
+
+.back-button {
+    background: #777;
+
+    color: white;
+
+    width: 100%;
+
+    margin-top: 15px;
+}
+
+
+/* =========================================
+   SYSTEM SETUP
+   ========================================= */
+
+.system-buttons {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 20px;
+
+    margin: 30px 0;
+}
+
+
+.system-buttons button {
+    background: #222;
+
+    color: white;
+
+    font-size: 24px;
+
+    padding: 30px;
+}
+
+
+/* =========================================
+   FORM
+   ========================================= */
 
 label {
     display: block;
-    margin-bottom: 6px;
+
     font-weight: bold;
+
+    margin-top: 20px;
+
+    margin-bottom: 8px;
 }
+
 
 input,
 select {
     width: 100%;
+
     padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #bbb;
+
+    border:
+        1px solid #bbb;
+
     border-radius: 7px;
+
     font-size: 16px;
 }
 
 
-/* PLAYER INPUTS */
-
-.player-input {
+.player-row {
     display: grid;
-    grid-template-columns: 1fr 120px;
+
+    grid-template-columns:
+        1fr 100px;
+
     gap: 10px;
+
     margin-bottom: 10px;
 }
 
-.player-input input {
+
+.player-row input {
     margin: 0;
 }
 
 
-/* COURT */
+.libero-input {
+    margin-top: 20px;
 
-.court {
-    position: relative;
-    width: 100%;
-    max-width: 650px;
-    height: 500px;
-    margin: 30px auto;
-    background: #d6d6d6;
-    border: 5px solid #222;
+    padding-top: 15px;
+
+    border-top:
+        2px solid #ddd;
+}
+
+
+.libero-choice {
     display: grid;
 
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns:
+        1fr 1fr;
 
-    gap: 4px;
-    padding: 4px;
+    gap: 10px;
 }
 
-.court::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50%;
-    border-top: 5px solid #222;
+
+.libero-choice button {
+    background: #444;
+
+    color: white;
 }
 
-.court-position {
-    background: white;
-    border: 2px solid #222;
-    border-radius: 10px;
-    padding: 10px;
+
+/* =========================================
+   ROTATION SCREEN
+   ========================================= */
+
+.rotation-header {
     display: flex;
-    flex-direction: column;
+
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    z-index: 1;
+
+    justify-content: space-between;
+
+    margin-bottom: 20px;
 }
 
-.pos4 {
-    grid-column: 1;
-    grid-row: 1;
+
+.rotation-header h2 {
+    text-align: left;
+
+    margin: 0;
 }
 
-.pos3 {
-    grid-column: 2;
-    grid-row: 1;
+
+.rotation-actions {
+    display: flex;
+
+    gap: 10px;
 }
 
-.pos2 {
-    grid-column: 3;
-    grid-row: 1;
+
+.rotation-actions button {
+    background: #222;
+
+    color: white;
 }
 
-.pos5 {
-    grid-column: 1;
-    grid-row: 2;
-}
 
-.pos6 {
-    grid-column: 2;
-    grid-row: 2;
-}
-
-.pos1 {
-    grid-column: 3;
-    grid-row: 2;
-}
-
-.position-number {
-    font-size: 14px;
+#rotationCounter {
     font-weight: bold;
-    margin-bottom: 6px;
+
+    color: #666;
 }
+
+
+/* =========================================
+   VOLLEYBALL COURT
+   ========================================= */
+
+.volleyball-court {
+    position: relative;
+
+    width: min(850px, 100%);
+
+    height: 600px;
+
+    margin: 0 auto;
+
+    background: #e2e2e2;
+
+    border:
+        5px solid #222;
+
+    overflow: hidden;
+}
+
+
+/*
+   The court is divided into:
+
+   4 | 3 | 2
+   ---------
+   5 | 6 | 1
+
+   The net is between front/back row.
+*/
+
+
+.net {
+    position: absolute;
+
+    left: 0;
+
+    right: 0;
+
+    top: 50%;
+
+    height: 8px;
+
+    background: #222;
+
+    z-index: 2;
+}
+
+
+/* =========================================
+   COURT PLAYER CIRCLES
+   ========================================= */
+
+.court-player {
+    position: absolute;
+
+    width: 110px;
+
+    height: 110px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    border:
+        4px solid #222;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    z-index: 5;
+
+    transition:
+        left 0.6s ease,
+        top 0.6s ease,
+        transform 0.3s ease;
+
+    box-shadow:
+        0 4px 10px
+        rgba(0, 0, 0, 0.2);
+}
+
+
+.court-player:hover {
+    transform: scale(1.06);
+}
+
+
+.player-number {
+    font-size: 27px;
+
+    font-weight: bold;
+}
+
 
 .player-name {
-    font-size: 17px;
-    font-weight: bold;
-}
+    max-width: 90px;
 
-.jersey-number {
-    font-size: 14px;
-    margin-top: 4px;
-}
-
-.role {
     font-size: 13px;
-    margin-top: 5px;
-    font-style: italic;
+
+    font-weight: bold;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
 }
 
-.libero {
-    border: 4px solid #555;
+
+.player-role {
+    font-size: 11px;
+
+    margin-top: 3px;
+
+    color: #555;
 }
 
 
-/* ROTATION INFORMATION */
+/* =========================================
+   COURT POSITIONS
+   ========================================= */
 
-.rotation-info {
+/* Front row */
+
+.pos4 {
+    left: 10%;
+
+    top: 17%;
+}
+
+
+.pos3 {
+    left: calc(50% - 55px);
+
+    top: 17%;
+}
+
+
+.pos2 {
+    right: 10%;
+
+    top: 17%;
+}
+
+
+/* Back row */
+
+.pos5 {
+    left: 10%;
+
+    bottom: 17%;
+}
+
+
+.pos6 {
+    left: calc(50% - 55px);
+
+    bottom: 17%;
+}
+
+
+.pos1 {
+    right: 10%;
+
+    bottom: 17%;
+}
+
+
+/* =========================================
+   LIBERO
+   ========================================= */
+
+.court-player.libero-player {
+    border:
+        5px solid #555;
+
+    background: #f5f5f5;
+}
+
+
+/* =========================================
+   COURT CONTROLS
+   ========================================= */
+
+.court-controls {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    margin-top: 20px;
+}
+
+
+.court-controls button {
+    background: #222;
+
+    color: white;
+}
+
+
+.animation-info {
     text-align: center;
-    font-size: 17px;
+
+    margin-top: 15px;
+
+    padding: 12px;
+
+    background: white;
+
+    border-radius: 8px;
 }
 
-#liberoStatus {
+
+/* =========================================
+   ANIMATION
+   ========================================= */
+
+.serve-receive .court-player {
+    transform: scale(0.9);
+}
+
+
+.movement-active .court-player {
+    animation:
+        playerMove 1.2s ease-in-out
+        infinite alternate;
+}
+
+
+@keyframes playerMove {
+
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-12px);
+    }
+
+}
+
+
+/* =========================================
+   SCOREKEEPER
+   ========================================= */
+
+.score-screen {
+    max-width: 1200px;
+
+    margin: 0 auto;
+}
+
+
+.score-header {
+    display: grid;
+
+    grid-template-columns:
+        1fr 200px 1fr;
+
+    gap: 20px;
+
+    align-items: center;
+
+    text-align: center;
+
+    background: white;
+
+    border-radius: 15px;
+
+    padding: 20px;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.12);
+}
+
+
+.team-name-input {
+    width: 90%;
+
+    text-align: center;
+
+    font-size: 22px;
+
     font-weight: bold;
 }
 
 
-/* SCOREBOARD */
+.score-number {
+    font-size: 100px;
 
-.team-names {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    line-height: 1;
+
+    font-weight: bold;
+
+    margin-top: 15px;
 }
 
-.scoreboard {
+
+.match-information {
+    font-size: 17px;
+
+    line-height: 2;
+}
+
+
+.match-information span {
+    font-weight: bold;
+}
+
+
+/* =========================================
+   SCORE BUTTONS
+   ========================================= */
+
+.score-buttons {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 30px;
+
     margin-top: 25px;
 }
 
-.score-team {
+
+.team-score-controls {
+    display: grid;
+
+    grid-template-columns:
+        1fr 130px;
+
+    gap: 12px;
+}
+
+
+.point-button {
+    min-height: 180px;
+
+    font-size: 65px;
+
+    color: white;
+}
+
+
+.point-button.team-a {
+    background: #c62828;
+}
+
+
+.point-button.team-b {
+    background: #1565c0;
+}
+
+
+.minus-button {
+    min-height: 180px;
+
+    font-size: 40px;
+
+    background: #555;
+
+    color: white;
+}
+
+
+/* =========================================
+   SCORE MESSAGES
+   ========================================= */
+
+.set-message {
     text-align: center;
-    padding: 25px;
-    border: 2px solid #ccc;
-    border-radius: 12px;
-}
 
-.score-team h3 {
-    margin-top: 0;
-}
+    min-height: 40px;
 
-.score-team div {
-    font-size: 70px;
-    font-weight: bold;
     margin: 20px 0;
-}
 
-.match-info {
-    text-align: center;
-    font-size: 18px;
-    margin: 25px 0;
-}
-
-#setMessage {
-    text-align: center;
     font-size: 20px;
+
     font-weight: bold;
-    margin: 20px;
 }
+
+
+.score-options {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+
+.score-options button {
+    background: #333;
+
+    color: white;
+}
+
+
+.score-options .back-button {
+    width: auto;
+}
+
+
+/* =========================================
+   FOOTER
+   ========================================= */
 
 footer {
-    text-align: center;
-    padding: 25px;
+    display: flex;
+
+    justify-content: center;
+
+    gap: 20px;
+
+    padding: 20px;
+
     color: #777;
 }
 
 
-/* MOBILE */
+/* =========================================
+   LANDSCAPE MODE
+   ========================================= */
 
-@media (max-width: 600px) {
+@media (orientation: landscape) {
 
-    .card {
-        padding: 20px;
+    .score-screen {
+        padding-bottom: 10px;
     }
 
-    .court {
-        height: 400px;
+    .score-header {
+        padding: 12px;
     }
 
-    .player-input {
-        grid-template-columns: 1fr;
+    .score-number {
+        font-size: 70px;
     }
 
-    .team-names,
-    .scoreboard {
-        grid-template-columns: 1fr;
+    .point-button,
+    .minus-button {
+        min-height: 130px;
     }
 
-    .score-team div {
-        font-size: 55px;
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 700px) {
+
+    .top-bar h1 {
+        font-size: 19px;
+    }
+
+    .top-bar p {
+        font-size: 12px;
+    }
+
+
+    main {
+        padding: 15px;
+    }
+
+
+    .menu-card,
+    .setup-card {
+        padding: 22px;
+
+        margin: 15px auto;
+    }
+
+
+    .system-buttons {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .rotation-header {
+        flex-direction: column;
+
+        gap: 15px;
+
+        align-items: stretch;
+    }
+
+
+    .rotation-header h2 {
+        text-align: center;
+    }
+
+
+    .volleyball-court {
+        height: 500px;
+    }
+
+
+    .court-player {
+        width: 80px;
+
+        height: 80px;
+    }
+
+
+    .pos3,
+    .pos6 {
+        margin-left: -40px;
+    }
+
+
+    .player-number {
+        font-size: 20px;
+    }
+
+
+    .player-name {
+        max-width: 65px;
+
+        font-size: 10px;
+    }
+
+
+    .score-header {
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 10px;
+    }
+
+
+    .match-information {
+        grid-column:
+            1 / -1;
+
+        grid-row: 2;
+    }
+
+
+    .score-number {
+        font-size: 65px;
+    }
+
+
+    .score-buttons {
+        gap: 10px;
+    }
+
+
+    .team-score-controls {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .point-button {
+        min-height: 130px;
+
+        font-size: 50px;
+    }
+
+
+    .minus-button {
+        min-height: 65px;
     }
 
 }
