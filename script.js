@@ -1,11 +1,12 @@
-// ============================================
-// VOLLEYBALL ROTATION TOOL
-// ============================================
+/* =========================================
+   VOLLEYBALL ROTATION TOOL
+   VERSION 1.1
+   ========================================= */
 
 
-// --------------------------------------------
-// SYSTEMS
-// --------------------------------------------
+/* =========================================
+   SYSTEM POSITIONS
+   ========================================= */
 
 const positions51 = [
     "Setter",
@@ -15,6 +16,7 @@ const positions51 = [
     "Middle 2",
     "Left Side 1"
 ];
+
 
 const positions62 = [
     "Setter 1",
@@ -26,37 +28,55 @@ const positions62 = [
 ];
 
 
-// --------------------------------------------
-// GAME VARIABLES
-// --------------------------------------------
-
-let system = null;
 let positions = [];
 
-let players = Array(6).fill("");
-let jerseyNums = Array(6).fill("");
+let system = 0;
+
+
+/* =========================================
+   PLAYER DATA
+   ========================================= */
+
+let players = [
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+];
+
+
+let jerseyNums = [
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+];
+
 
 let libero = {
     name: "",
     jersey: ""
 };
 
-// Each item represents the player currently
-// occupying a rotational position.
-//
-// Position 0 = court position 1
-// Position 1 = court position 2
-// Position 2 = court position 3
-// Position 3 = court position 4
-// Position 4 = court position 5
-// Position 5 = court position 6
 
-let courtPlayers = [];
+/* =========================================
+   LIBERO
+   ========================================= */
+
+let usingLibero = false;
 
 
-// --------------------------------------------
-// LIBERO STATE
-// --------------------------------------------
+/*
+    The libero is NOT stored as a seventh
+    rotational player.
+
+    Instead, we remember which middle blocker
+    the libero is temporarily replacing.
+*/
 
 let liberoState = {
     active: false,
@@ -64,161 +84,256 @@ let liberoState = {
 };
 
 
-// --------------------------------------------
-// SCORE VARIABLES
-// --------------------------------------------
+/* =========================================
+   ROTATION
+   ========================================= */
+
+let courtPos = [];
+
+let rotationNumber = 1;
+
+
+/* =========================================
+   SCORE
+   ========================================= */
 
 let teamAScore = 0;
+
 let teamBScore = 0;
 
 let setsWonA = 0;
+
 let setsWonB = 0;
 
 let currentSet = 1;
 
-let servingTeam = "Team A";
+let servingTeam = "A";
 
 
-// ============================================
-// PAGE NAVIGATION
-// ============================================
+/* =========================================
+   NAVIGATION
+   ========================================= */
 
-function hideAllSections() {
+function hideAllScreens() {
 
-    document.getElementById("menu").classList.add("hidden");
-    document.getElementById("systemSetup").classList.add("hidden");
-    document.getElementById("rotationSetup").classList.add("hidden");
-    document.getElementById("playerSetup").classList.add("hidden");
-    document.getElementById("rotationDisplay").classList.add("hidden");
-    document.getElementById("scoreTracker").classList.add("hidden");
+    document
+        .querySelectorAll(".screen")
+        .forEach(screen => {
+            screen.classList.add("hidden");
+        });
 }
 
 
 function goHome() {
 
-    hideAllSections();
+    hideAllScreens();
 
-    document.getElementById("menu").classList.remove("hidden");
+    document
+        .getElementById("homeScreen")
+        .classList.remove("hidden");
 }
 
 
-// ============================================
-// ROTATION SETUP
-// ============================================
+/* =========================================
+   ROTATION SETUP
+   ========================================= */
 
-function showRotationSetup() {
+function openRotationSetup() {
 
-    hideAllSections();
+    hideAllScreens();
 
-    document.getElementById("systemSetup").classList.remove("hidden");
+    document
+        .getElementById("systemScreen")
+        .classList.remove("hidden");
 
-    // Remember that we're setting up a rotation.
-    document.getElementById("systemSetup").dataset.mode = "rotation";
+    document
+        .getElementById("systemScreen")
+        .dataset.mode = "rotation";
 }
 
 
-function showPlayerSetup() {
+function openPlayerSetup() {
 
-    hideAllSections();
+    hideAllScreens();
 
-    document.getElementById("systemSetup").classList.remove("hidden");
+    document
+        .getElementById("systemScreen")
+        .classList.remove("hidden");
 
-    document.getElementById("systemSetup").dataset.mode = "players";
+    document
+        .getElementById("systemScreen")
+        .dataset.mode = "players";
 }
 
 
-function selectSystem(selectedSystem) {
+function chooseSystem(selectedSystem) {
 
     system = selectedSystem;
 
     if (system === 5) {
+
         positions = [...positions51];
+
     } else {
+
         positions = [...positions62];
+
     }
 
-    const mode = document.getElementById("systemSetup").dataset.mode;
+
+    const mode =
+        document
+            .getElementById("systemScreen")
+            .dataset.mode;
+
 
     if (mode === "rotation") {
 
-        hideAllSections();
+        hideAllScreens();
 
-        document.getElementById("rotationSetup").classList.remove("hidden");
+        document
+            .getElementById("rotationSetupScreen")
+            .classList.remove("hidden");
+
+
+        document
+            .getElementById("selectedSystemText")
+            .textContent =
+                `Selected system: ${system === 5 ? "5–1" : "6–2"}`;
 
     } else {
 
-        hideAllSections();
+        openPlayerInputs();
 
-        document.getElementById("playerSetup").classList.remove("hidden");
-
-        createPlayerInputs();
     }
 }
 
 
-// ============================================
-// PLAYER INPUT
-// ============================================
+/* =========================================
+   LIBERO SELECTION
+   ========================================= */
 
-function createPlayerInputs() {
+function setLiberoUsage(value) {
 
-    const container = document.getElementById("playerInputs");
+    usingLibero = value;
+
+    const yesButton =
+        document.getElementById(
+            "liberoYesButton"
+        );
+
+    const noButton =
+        document.getElementById(
+            "liberoNoButton"
+        );
+
+
+    if (value) {
+
+        yesButton.style.opacity = "1";
+
+        noButton.style.opacity = "0.5";
+
+    } else {
+
+        yesButton.style.opacity = "0.5";
+
+        noButton.style.opacity = "1";
+
+    }
+}
+
+
+/* =========================================
+   PLAYER INPUT
+   ========================================= */
+
+function openPlayerInputs() {
+
+    hideAllScreens();
+
+    document
+        .getElementById("playerSetupScreen")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("playerSystemText")
+        .textContent =
+            `Player setup for the ${system === 5 ? "5–1" : "6–2"} system.`;
+
+
+    const container =
+        document.getElementById(
+            "playerInputs"
+        );
+
 
     container.innerHTML = "";
 
-    document.getElementById("playerSystemText").textContent =
-        `You are using the ${system === 5 ? "5–1" : "6–2"} system.`;
 
     for (let i = 0; i < 6; i++) {
 
-        const wrapper = document.createElement("div");
+        const row =
+            document.createElement("div");
 
-        wrapper.className = "player-input";
+        row.className = "player-row";
 
-        wrapper.innerHTML = `
+
+        row.innerHTML = `
+
             <input
-                type="text"
                 id="player-${i}"
+                type="text"
                 placeholder="${positions[i]}"
                 value="${players[i]}"
             >
 
             <input
-                type="number"
                 id="jersey-${i}"
+                type="number"
                 placeholder="#"
                 value="${jerseyNums[i]}"
             >
+
         `;
 
-        container.appendChild(wrapper);
+
+        container.appendChild(row);
     }
 
-    const liberoWrapper = document.createElement("div");
 
-    liberoWrapper.innerHTML = `
-        <label>Libero</label>
+    const liberoContainer =
+        document.getElementById(
+            "liberoInputContainer"
+        );
 
-        <div class="player-input">
+
+    liberoContainer.innerHTML = `
+
+        <label>
+            Libero
+        </label>
+
+        <div class="player-row">
 
             <input
-                type="text"
                 id="libero-name"
+                type="text"
                 placeholder="Libero"
                 value="${libero.name}"
             >
 
             <input
-                type="number"
                 id="libero-jersey"
+                type="number"
                 placeholder="#"
                 value="${libero.jersey}"
             >
 
         </div>
-    `;
 
-    container.appendChild(liberoWrapper);
+    `;
 }
 
 
@@ -227,17 +342,55 @@ function savePlayers() {
     for (let i = 0; i < 6; i++) {
 
         players[i] =
-            document.getElementById(`player-${i}`).value.trim();
+            document
+                .getElementById(
+                    `player-${i}`
+                )
+                .value
+                .trim();
+
 
         jerseyNums[i] =
-            document.getElementById(`jersey-${i}`).value.trim();
+            document
+                .getElementById(
+                    `jersey-${i}`
+                )
+                .value
+                .trim();
     }
 
+
     libero.name =
-        document.getElementById("libero-name").value.trim();
+        document
+            .getElementById("libero-name")
+            .value
+            .trim();
+
 
     libero.jersey =
-        document.getElementById("libero-jersey").value.trim();
+        document
+            .getElementById("libero-jersey")
+            .value
+            .trim();
+
+
+    localStorage.setItem(
+        "volleyballPlayers",
+        JSON.stringify(players)
+    );
+
+
+    localStorage.setItem(
+        "volleyballJerseys",
+        JSON.stringify(jerseyNums)
+    );
+
+
+    localStorage.setItem(
+        "volleyballLibero",
+        JSON.stringify(libero)
+    );
+
 
     alert("Players saved!");
 
@@ -245,126 +398,244 @@ function savePlayers() {
 }
 
 
-// ============================================
-// ROTATION START
-// ============================================
+/* =========================================
+   LOAD SAVED PLAYERS
+   ========================================= */
+
+function loadSavedPlayers() {
+
+    const savedPlayers =
+        localStorage.getItem(
+            "volleyballPlayers"
+        );
+
+
+    const savedJerseys =
+        localStorage.getItem(
+            "volleyballJerseys"
+        );
+
+
+    const savedLibero =
+        localStorage.getItem(
+            "volleyballLibero"
+        );
+
+
+    if (savedPlayers) {
+
+        players =
+            JSON.parse(savedPlayers);
+
+    }
+
+
+    if (savedJerseys) {
+
+        jerseyNums =
+            JSON.parse(savedJerseys);
+
+    }
+
+
+    if (savedLibero) {
+
+        libero =
+            JSON.parse(savedLibero);
+
+    }
+}
+
+
+/* =========================================
+   ROTATION START
+   ========================================= */
 
 function startRotation() {
 
     const setterPosition =
         parseInt(
-            document.getElementById("setterPosition").value
+            document
+                .getElementById(
+                    "setterPosition"
+                )
+                .value
         );
 
+
     /*
-        Python:
+        0-based rotation.
 
-        for x in range(6):
-            court_pos.append((setter_pos - x) % 6)
+        If setter starts at position 1:
 
-        JavaScript uses 0-based arrays, so:
-        position 1 becomes index 0.
+        Position 1 -> index 0
+        Position 6 -> index 5
+        Position 5 -> index 4
+        etc.
     */
 
-    courtPlayers = [];
+    courtPos = [];
+
 
     for (let x = 0; x < 6; x++) {
 
-        let index =
-            ((setterPosition - 1 - x) % 6 + 6) % 6;
+        const index =
+            (
+                setterPosition -
+                1 -
+                x +
+                600
+            ) % 6;
 
-        courtPlayers.push(index);
+
+        courtPos.push(index);
     }
 
+
+    rotationNumber = 1;
+
+
     liberoState.active = false;
+
     liberoState.replacedMiddle = null;
 
-    updateLibero();
 
-    hideAllSections();
+    if (usingLibero) {
+
+        updateLibero();
+
+    }
+
+
+    hideAllScreens();
+
 
     document
-        .getElementById("rotationDisplay")
+        .getElementById(
+            "rotationScreen"
+        )
         .classList.remove("hidden");
+
+
+    document
+        .getElementById(
+            "rotationSystemTitle"
+        )
+        .textContent =
+            `${system === 5 ? "5–1" : "6–2"} Rotation`;
+
 
     displayCourt();
 }
 
 
-// ============================================
-// LIBERO LOGIC
-// ============================================
+/* =========================================
+   LIBERO LOGIC
+   ========================================= */
 
 function updateLibero() {
 
+    if (!usingLibero) {
+
+        liberoState.active = false;
+
+        liberoState.replacedMiddle = null;
+
+        return;
+    }
+
+
     /*
-        Back-row rotational positions:
+        Court array indexes:
 
-        court index 0 = position 1
-        court index 1 = position 2
-        court index 2 = position 3
-        court index 3 = position 4
-        court index 4 = position 5
-        court index 5 = position 6
+        0 = Position 1
+        1 = Position 2
+        2 = Position 3
+        3 = Position 4
+        4 = Position 5
+        5 = Position 6
 
-        The back row is positions 1, 5 and 6.
+
+        Back row:
+
+        Position 1
+        Position 5
+        Position 6
 
         Therefore:
-        indexes 0, 4 and 5.
+
+        0, 4, 5
     */
 
-    const backRow = new Set([0, 4, 5]);
+    const backRow = [0, 4, 5];
 
 
-    // ----------------------------------------
-    // If libero is currently replacing a middle
-    // ----------------------------------------
+    /*
+        If the libero is already replacing
+        a middle, check whether that middle
+        has moved to the front row.
+    */
 
-    if (liberoState.active) {
+    if (
+        liberoState.active &&
+        liberoState.replacedMiddle !== null
+    ) {
 
-        const replacedIndex =
-            courtPlayers.indexOf(
+        const middlePosition =
+            courtPos.indexOf(
                 liberoState.replacedMiddle
             );
 
-        if (replacedIndex !== -1) {
+
+        if (
+            middlePosition !== -1 &&
+            !backRow.includes(
+                middlePosition
+            )
+        ) {
 
             /*
-                If the replaced middle has moved
-                to the front row, the libero leaves.
+                The middle is now in the
+                front row.
+
+                The libero comes off.
             */
 
-            if (!backRow.has(replacedIndex)) {
+            liberoState.active = false;
 
-                courtPlayers[replacedIndex] =
-                    liberoState.replacedMiddle;
-
-                liberoState.active = false;
-                liberoState.replacedMiddle = null;
-            }
+            liberoState.replacedMiddle = null;
         }
     }
 
 
-    // ----------------------------------------
-    // If libero isn't on court, look for a
-    // middle blocker in the back row.
-    // ----------------------------------------
+    /*
+        If the libero isn't currently on,
+        look for a middle in the back row.
+    */
 
     if (!liberoState.active) {
 
-        for (let i = 0; i < courtPlayers.length; i++) {
+        for (
+            let i = 0;
+            i < courtPos.length;
+            i++
+        ) {
 
-            const playerIndex = courtPlayers[i];
+            const playerIndex =
+                courtPos[i];
 
-            const role = positions[playerIndex];
+
+            const role =
+                positions[playerIndex];
+
 
             const isMiddle =
                 role === "Middle 1" ||
                 role === "Middle 2";
 
+
             if (
-                backRow.has(i) &&
+                backRow.includes(i) &&
                 isMiddle
             ) {
 
@@ -373,15 +644,6 @@ function updateLibero() {
                 liberoState.replacedMiddle =
                     playerIndex;
 
-                /*
-                    We do NOT change the underlying
-                    rotation permanently.
-
-                    We simply display the libero
-                    instead of this middle while
-                    they are in the back row.
-                */
-
                 break;
             }
         }
@@ -389,209 +651,451 @@ function updateLibero() {
 }
 
 
-// ============================================
-// ROTATION
-// ============================================
+/* =========================================
+   ROTATE FORWARD
+   ========================================= */
 
-function rotatePlayers() {
+function nextRotation() {
 
-    /*
-        This is equivalent to:
+    if (courtPos.length !== 6) {
+        return;
+    }
 
-        court_pos.append(court_pos.pop(0))
 
-        from the Python program.
-    */
+    const first =
+        courtPos.shift();
 
-    const firstPlayer = courtPlayers.shift();
 
-    courtPlayers.push(firstPlayer);
+    courtPos.push(first);
+
+
+    rotationNumber++;
+
 
     updateLibero();
+
 
     displayCourt();
 }
 
 
-// ============================================
-// COURT DISPLAY
-// ============================================
+/* =========================================
+   ROTATE BACKWARD
+   ========================================= */
+
+function previousRotation() {
+
+    if (courtPos.length !== 6) {
+        return;
+    }
+
+
+    const last =
+        courtPos.pop();
+
+
+    courtPos.unshift(last);
+
+
+    rotationNumber--;
+
+
+    if (rotationNumber < 1) {
+        rotationNumber = 6;
+    }
+
+
+    updateLibero();
+
+
+    displayCourt();
+}
+
+
+/* =========================================
+   DISPLAY COURT
+   ========================================= */
 
 function displayCourt() {
 
-    const courtPositions = {
+    const courtElements = {
 
-        1: document.getElementById("pos1"),
-        2: document.getElementById("pos2"),
-        3: document.getElementById("pos3"),
-        4: document.getElementById("pos4"),
-        5: document.getElementById("pos5"),
-        6: document.getElementById("pos6")
+        1: document.getElementById(
+            "courtPos1"
+        ),
+
+        2: document.getElementById(
+            "courtPos2"
+        ),
+
+        3: document.getElementById(
+            "courtPos3"
+        ),
+
+        4: document.getElementById(
+            "courtPos4"
+        ),
+
+        5: document.getElementById(
+            "courtPos5"
+        ),
+
+        6: document.getElementById(
+            "courtPos6"
+        )
     };
 
 
-    for (let position = 1; position <= 6; position++) {
+    for (
+        let position = 1;
+        position <= 6;
+        position++
+    ) {
 
-        const element = courtPositions[position];
+        const element =
+            courtElements[position];
 
-        element.classList.remove("libero");
 
-        const courtIndex = position - 1;
+        const arrayIndex =
+            position - 1;
+
 
         const playerIndex =
-            courtPlayers[courtIndex];
+            courtPos[arrayIndex];
+
 
         let displayName =
             players[playerIndex];
 
-        let jersey =
+
+        let displayNumber =
             jerseyNums[playerIndex];
 
-        let role =
-            positions[playerIndex];
+
+        let displayRole =
+            getShortRole(
+                positions[playerIndex]
+            );
+
 
         let isLibero = false;
 
 
         /*
-            Determine whether the libero is currently
-            replacing this player.
+            If this player is the middle
+            being replaced, display the
+            libero instead.
         */
 
         if (
+            usingLibero &&
             liberoState.active &&
-            playerIndex === liberoState.replacedMiddle
+            playerIndex ===
+                liberoState.replacedMiddle
         ) {
 
-            displayName = libero.name || "Libero";
+            displayName =
+                libero.name ||
+                "Libero";
 
-            jersey = libero.jersey || "";
 
-            role = "Libero";
+            displayNumber =
+                libero.jersey ||
+                "";
+
+
+            displayRole = "LIB";
 
             isLibero = true;
         }
 
 
+        /*
+            If no name/number has been
+            entered, use the role.
+        */
+
+        if (
+            !displayName &&
+            !displayNumber
+        ) {
+
+            displayName =
+                displayRole;
+        }
+
+
         element.innerHTML = `
-            <div class="position-number">
-                Position ${position}
+
+            <div class="player-number">
+
+                ${
+                    displayNumber
+                        ? "#" + escapeHtml(
+                            displayNumber
+                        )
+                        : displayName
+                }
+
             </div>
 
-            <div class="player-name">
-                ${displayName || "Empty"}
+            ${
+                displayNumber
+                    ? `
+                        <div class="player-name">
+                            ${escapeHtml(
+                                displayName ||
+                                displayRole
+                            )}
+                        </div>
+                    `
+                    : ""
+            }
+
+            <div class="player-role">
+                ${displayRole}
             </div>
 
-            <div class="jersey-number">
-                ${jersey ? "#" + jersey : ""}
-            </div>
-
-            <div class="role">
-                ${role}
-            </div>
         `;
 
 
-        if (isLibero) {
-            element.classList.add("libero");
-        }
+        element.classList.toggle(
+            "libero-player",
+            isLibero
+        );
     }
 
 
-    // ----------------------------------------
-    // FIND CURRENT SETTER POSITION
-    // ----------------------------------------
+    document
+        .getElementById(
+            "rotationCounter"
+        )
+        .textContent =
+            `Rotation ${rotationNumber}`;
+
 
     /*
-        5–1 has one setter.
-        6–2 has two setters.
+        6–2 special display.
 
-        Find all setter players, then determine
-        which setter is currently on the court
-        and their current court position.
+        The rotation itself is still based
+        on the player's actual rotational
+        position. This means the setter can
+        naturally appear in the back row
+        rather than being forced into the
+        front row.
     */
-
-    const setterIndexes = positions
-        .map((role, index) => {
-
-            if (
-                role === "Setter" ||
-                role === "Setter 1" ||
-                role === "Setter 2"
-            ) {
-                return index;
-            }
-
-            return -1;
-        })
-        .filter(index => index !== -1);
-
-
-    const setterCourtIndex =
-        courtPlayers.findIndex(playerIndex =>
-            setterIndexes.includes(playerIndex)
-        );
-
-
-    const setterPosition =
-        setterCourtIndex + 1;
-
-
-    document.getElementById("rotationNumber").textContent =
-        `Rotation — Setter Position ${setterPosition}`;
-
-
-    // ----------------------------------------
-    // LIBERO STATUS
-    // ----------------------------------------
-
-    if (liberoState.active) {
-
-        const middle =
-            players[liberoState.replacedMiddle];
-
-        document.getElementById("liberoStatus").textContent =
-            `Libero is replacing ${middle || "Middle Blocker"}.`;
-
-    } else {
-
-        document.getElementById("liberoStatus").textContent =
-            "Libero is currently off the court.";
-    }
-
-
-    // ----------------------------------------
-    // ROTATION TITLE
-    // ----------------------------------------
-
-    document.getElementById("rotationTitle").textContent =
-        `${system === 5 ? "5–1" : "6–2"} Starting Rotation`;
 }
 
 
-// ============================================
-// SCORE TRACKER
-// ============================================
+/* =========================================
+   ROLE ABBREVIATIONS
+   ========================================= */
 
-function showScoreTracker() {
+function getShortRole(role) {
 
-    hideAllSections();
+    if (!role) {
+        return "";
+    }
+
+
+    if (
+        role === "Setter" ||
+        role === "Setter 1" ||
+        role === "Setter 2"
+    ) {
+
+        return "S";
+    }
+
+
+    if (
+        role === "Middle 1" ||
+        role === "Middle 2"
+    ) {
+
+        return "MB";
+    }
+
+
+    if (
+        role === "Left Side 1" ||
+        role === "Left Side 2"
+    ) {
+
+        return "LS";
+    }
+
+
+    if (role === "Right Side") {
+
+        return "RS";
+    }
+
+
+    if (role === "Libero") {
+
+        return "LIB";
+    }
+
+
+    return role;
+}
+
+
+/* =========================================
+   ESCAPE HTML
+   ========================================= */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+/* =========================================
+   SERVE RECEIVE
+   ========================================= */
+
+function toggleServeReceive() {
+
+    const court =
+        document.querySelector(
+            ".volleyball-court"
+        );
+
+
+    court.classList.toggle(
+        "serve-receive"
+    );
+
+
+    const info =
+        document.getElementById(
+            "animationInfo"
+        );
+
+
+    const text =
+        document.getElementById(
+            "animationText"
+        );
+
+
+    if (
+        court.classList.contains(
+            "serve-receive"
+        )
+    ) {
+
+        text.textContent =
+            "Serve receive positions shown.";
+
+        info.classList.remove(
+            "hidden"
+        );
+
+    } else {
+
+        info.classList.add(
+            "hidden"
+        );
+    }
+}
+
+
+/* =========================================
+   MOVEMENT
+   ========================================= */
+
+function toggleMovement() {
+
+    const court =
+        document.querySelector(
+            ".volleyball-court"
+        );
+
+
+    court.classList.toggle(
+        "movement-active"
+    );
+
+
+    const info =
+        document.getElementById(
+            "animationInfo"
+        );
+
+
+    const text =
+        document.getElementById(
+            "animationText"
+        );
+
+
+    if (
+        court.classList.contains(
+            "movement-active"
+        )
+    ) {
+
+        text.textContent =
+            "Player movement after the serve is being shown.";
+
+        info.classList.remove(
+            "hidden"
+        );
+
+    } else {
+
+        info.classList.add(
+            "hidden"
+        );
+    }
+}
+
+
+/* =========================================
+   SCOREKEEPER
+   ========================================= */
+
+function openScorekeeper() {
+
+    hideAllScreens();
 
     document
-        .getElementById("scoreTracker")
-        .classList.remove("hidden");
+        .getElementById(
+            "scoreScreen"
+        )
+        .classList.remove(
+            "hidden"
+        );
+
 
     updateScoreDisplay();
 }
 
 
-// --------------------------------------------
-// Add point
-// --------------------------------------------
+/* =========================================
+   ADD POINT
+   ========================================= */
 
 function addPoint(team) {
 
-    if (setsWonA >= 3 || setsWonB >= 3) {
+    /*
+        Don't allow points after the
+        match has finished.
+    */
+
+    if (
+        setsWonA >= 3 ||
+        setsWonB >= 3
+    ) {
+
         return;
     }
 
@@ -600,17 +1104,13 @@ function addPoint(team) {
 
         teamAScore++;
 
-        servingTeam =
-            document.getElementById("teamAName").value ||
-            "Team A";
+        servingTeam = "A";
 
     } else {
 
         teamBScore++;
 
-        servingTeam =
-            document.getElementById("teamBName").value ||
-            "Team B";
+        servingTeam = "B";
     }
 
 
@@ -620,21 +1120,55 @@ function addPoint(team) {
 }
 
 
-// ============================================
-// SET WINNER
-// ============================================
+/* =========================================
+   REMOVE POINT
+   ========================================= */
+
+function removePoint(team) {
+
+    if (team === "A") {
+
+        if (teamAScore > 0) {
+
+            teamAScore--;
+        }
+
+    } else {
+
+        if (teamBScore > 0) {
+
+            teamBScore--;
+        }
+    }
+
+
+    updateScoreDisplay();
+}
+
+
+/* =========================================
+   CHECK SET WINNER
+   ========================================= */
 
 function checkSetWinner() {
 
-    const isFinalSet = currentSet === 5;
+    /*
+        Sets 1–4:
+
+        First to 25
+        Win by 2
+
+        Set 5:
+
+        First to 15
+        Win by 2
+    */
 
     const pointsNeeded =
-        isFinalSet ? 15 : 25;
+        currentSet === 5
+            ? 15
+            : 25;
 
-
-    /*
-        A set must be won by at least two points.
-    */
 
     if (
         teamAScore >= pointsNeeded &&
@@ -643,7 +1177,11 @@ function checkSetWinner() {
 
         finishSet("A");
 
-    } else if (
+        return;
+    }
+
+
+    if (
         teamBScore >= pointsNeeded &&
         teamBScore - teamAScore >= 2
     ) {
@@ -653,173 +1191,240 @@ function checkSetWinner() {
 }
 
 
-// ============================================
-// FINISH SET
-// ============================================
+/* =========================================
+   FINISH SET
+   ========================================= */
 
 function finishSet(winner) {
 
-    const winningScore =
-        winner === "A" ? teamAScore : teamBScore;
-
-    const losingScore =
-        winner === "A" ? teamBScore : teamAScore;
-
-
     if (winner === "A") {
+
         setsWonA++;
+
     } else {
+
         setsWonB++;
     }
 
 
-    updateScoreDisplay();
+    const teamAName =
+        document
+            .getElementById(
+                "teamAName"
+            )
+            .value ||
+        "Team A";
 
 
-    // ----------------------------------------
-    // Match winner
-    // ----------------------------------------
+    const teamBName =
+        document
+            .getElementById(
+                "teamBName"
+            )
+            .value ||
+        "Team B";
 
-    if (setsWonA >= 3 || setsWonB >= 3) {
 
-        const teamAName =
-            document.getElementById("teamAName").value ||
-            "Team A";
+    const winnerName =
+        winner === "A"
+            ? teamAName
+            : teamBName;
 
-        const teamBName =
-            document.getElementById("teamBName").value ||
-            "Team B";
 
-        const winnerName =
-            winner === "A" ? teamAName : teamBName;
+    /*
+        MATCH WON
+    */
 
-        document.getElementById("setMessage").textContent =
-            `${winnerName} won the match! Final set score: ${winningScore}-${losingScore}`;
+    if (
+        setsWonA >= 3 ||
+        setsWonB >= 3
+    ) {
+
+        document
+            .getElementById(
+                "setMessage"
+            )
+            .textContent =
+                `${winnerName} won the match!`;
+
+        updateScoreDisplay();
 
         return;
     }
 
 
-    // ----------------------------------------
-    // Start next set
-    // ----------------------------------------
+    /*
+        NEXT SET
+    */
 
-    document.getElementById("setMessage").textContent =
-        `Set ${currentSet} finished ${winningScore}-${losingScore}. Starting the next set...`;
+    document
+        .getElementById(
+            "setMessage"
+        )
+        .textContent =
+            `${winnerName} won the set. Next set starting.`;
 
 
     currentSet++;
 
+
     teamAScore = 0;
+
     teamBScore = 0;
 
 
-    // In volleyball the deciding set is 15 points.
-    // Set 5 automatically uses 15.
     updateScoreDisplay();
 }
 
 
-// ============================================
-// SCORE DISPLAY
-// ============================================
+/* =========================================
+   SCORE DISPLAY
+   ========================================= */
 
 function updateScoreDisplay() {
 
     const teamAName =
-        document.getElementById("teamAName").value ||
+        document
+            .getElementById(
+                "teamAName"
+            )
+            .value ||
         "Team A";
 
+
     const teamBName =
-        document.getElementById("teamBName").value ||
+        document
+            .getElementById(
+                "teamBName"
+            )
+            .value ||
         "Team B";
 
 
-    document.getElementById("scoreTeamA").textContent =
-        teamAName;
-
-    document.getElementById("scoreTeamB").textContent =
-        teamBName;
-
-
-    document.getElementById("teamAScore").textContent =
-        teamAScore;
-
-    document.getElementById("teamBScore").textContent =
-        teamBScore;
+    document
+        .getElementById(
+            "teamAScore"
+        )
+        .textContent =
+            teamAScore;
 
 
-    document.getElementById("servingTeam").textContent =
-        servingTeam;
+    document
+        .getElementById(
+            "teamBScore"
+        )
+        .textContent =
+            teamBScore;
 
 
-    document.getElementById("setsScore").textContent =
-        `${setsWonA} - ${setsWonB}`;
+    document
+        .getElementById(
+            "currentSet"
+        )
+        .textContent =
+            currentSet;
 
 
-    document.getElementById("currentSet").textContent =
-        currentSet;
+    document
+        .getElementById(
+            "setsScore"
+        )
+        .textContent =
+            `${setsWonA} - ${setsWonB}`;
+
+
+    document
+        .getElementById(
+            "servingTeam"
+        )
+        .textContent =
+            servingTeam === "A"
+                ? teamAName
+                : teamBName;
 }
 
 
-// ============================================
-// RESET SET
-// ============================================
+/* =========================================
+   RESET SET
+   ========================================= */
 
 function resetSet() {
 
     teamAScore = 0;
+
     teamBScore = 0;
 
-    document.getElementById("setMessage").textContent = "";
+
+    document
+        .getElementById(
+            "setMessage"
+        )
+        .textContent = "";
+
 
     updateScoreDisplay();
 }
 
 
-// ============================================
-// RESET MATCH
-// ============================================
+/* =========================================
+   RESET MATCH
+   ========================================= */
 
 function resetMatch() {
 
     teamAScore = 0;
+
     teamBScore = 0;
 
     setsWonA = 0;
+
     setsWonB = 0;
 
     currentSet = 1;
 
-    servingTeam = "Team A";
+    servingTeam = "A";
 
-    document.getElementById("setMessage").textContent = "";
+
+    document
+        .getElementById(
+            "setMessage"
+        )
+        .textContent = "";
+
 
     updateScoreDisplay();
 }
 
 
-// ============================================
-// UPDATE TEAM NAMES
-// ============================================
+/* =========================================
+   TEAM NAME UPDATES
+   ========================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-    const teamAInput =
-        document.getElementById("teamAName");
-
-    const teamBInput =
-        document.getElementById("teamBName");
+        loadSavedPlayers();
 
 
-    teamAInput.addEventListener(
-        "input",
-        updateScoreDisplay
-    );
+        document
+            .getElementById(
+                "teamAName"
+            )
+            .addEventListener(
+                "input",
+                updateScoreDisplay
+            );
 
-    teamBInput.addEventListener(
-        "input",
-        updateScoreDisplay
-    );
 
-});
+        document
+            .getElementById(
+                "teamBName"
+            )
+            .addEventListener(
+                "input",
+                updateScoreDisplay
+            );
+
+    }
+);
