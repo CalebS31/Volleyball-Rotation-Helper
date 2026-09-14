@@ -223,22 +223,73 @@ select {
 
 .volleyball-court {
     position: relative;
-    width: min(850px, 100%);
-    height: 600px;
+
+    width: min(700px, 100%);
+    aspect-ratio: 1 / 1;
+
     margin: 0 auto;
-    background: #e2e2e2;
-    border: 5px solid #222;
+
+    background: #46aeb0;
+
     overflow: hidden;
 }
+``
 
 .net {
     position: absolute;
-    left: 0;
-    right: 0;
+
+    left: 20%;
+    right: 20%;
+
     top: 50%;
-    height: 8px;
-    background: #222;
+
+    height: 3px;
+
+    background: white;
+
     z-index: 2;
+}
+
+/* =========================================
+   COURT DRAWING
+   VERSION 1.4
+   ========================================= */
+
+.volleyball-court::before {
+    content: "";
+
+    position: absolute;
+
+    left: 20%;
+    right: 20%;
+
+    top: 8%;
+    bottom: 8%;
+
+    background: #c9965d;
+
+    border: 3px solid white;
+
+    z-index: 1;
+}
+
+.volleyball-court::after {
+    content: "";
+
+    position: absolute;
+
+    left: 20%;
+    right: 20%;
+
+    top: 50%;
+
+    height: 3px;
+
+    background: white;
+
+    transform: translateY(-50%);
+
+    z-index: 1;
 }
 
 /* =========================================
@@ -247,8 +298,8 @@ select {
 
 .court-player {
     position: absolute;
-    width: 110px;
-    height: 110px;
+    width: 85px;
+    height: 85px;
     border-radius: 50%;
     background: white;
     border: 4px solid #222;
@@ -291,33 +342,35 @@ select {
    ========================================= */
 
 .pos4 {
-    left: 10%;
-    top: 17%;
+    left: 24%;
+    top: 20%;
 }
 
 .pos3 {
-    left: calc(50% - 55px);
-    top: 17%;
+    left: 50%;
+    top: 20%;
+    transform: translateX(-50%);
 }
 
 .pos2 {
-    right: 10%;
-    top: 17%;
+    right: 24%;
+    top: 20%;
 }
 
 .pos5 {
-    left: 10%;
-    bottom: 17%;
+    left: 24%;
+    bottom: 20%;
 }
 
 .pos6 {
-    left: calc(50% - 55px);
-    bottom: 17%;
+    left: 50%;
+    bottom: 20%;
+    transform: translateX(-50%);
 }
 
 .pos1 {
-    right: 10%;
-    bottom: 17%;
+    right: 24%;
+    bottom: 20%;
 }
 
 /* =========================================
