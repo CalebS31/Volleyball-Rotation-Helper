@@ -21,7 +21,7 @@
     </div>
 
     <div class="version">
-        v1.1
+        v1.2
     </div>
 </header>
 
@@ -83,15 +83,11 @@
 
             <div class="system-buttons">
 
-                <button
-                    onclick="chooseSystem(5)"
-                >
+                <button onclick="chooseSystem(5)">
                     5–1
                 </button>
 
-                <button
-                    onclick="chooseSystem(6)"
-                >
+                <button onclick="chooseSystem(6)">
                     6–2
                 </button>
 
@@ -262,15 +258,11 @@
 
             <div class="rotation-actions">
 
-                <button
-                    onclick="previousRotation()"
-                >
+                <button onclick="previousRotation()">
                     ←
                 </button>
 
-                <button
-                    onclick="nextRotation()"
-                >
+                <button onclick="nextRotation()">
                     Rotate →
                 </button>
 
@@ -279,67 +271,50 @@
         </div>
 
 
-        <!-- HALF COURT -->
-
         <div class="volleyball-court">
 
             <div class="net"></div>
 
-            <!-- Front row -->
-
             <div
                 id="courtPos4"
                 class="court-player pos4"
-            >
-            </div>
+            ></div>
 
             <div
                 id="courtPos3"
                 class="court-player pos3"
-            >
-            </div>
+            ></div>
 
             <div
                 id="courtPos2"
                 class="court-player pos2"
-            >
-            </div>
-
-
-            <!-- Back row -->
+            ></div>
 
             <div
                 id="courtPos5"
                 class="court-player pos5"
-            >
-            </div>
+            ></div>
 
             <div
                 id="courtPos6"
                 class="court-player pos6"
-            >
-            </div>
+            ></div>
 
             <div
                 id="courtPos1"
                 class="court-player pos1"
-            >
-            </div>
+            ></div>
 
         </div>
 
 
         <div class="court-controls">
 
-            <button
-                onclick="toggleServeReceive()"
-            >
+            <button onclick="toggleServeReceive()">
                 Serve Receive
             </button>
 
-            <button
-                onclick="toggleMovement()"
-            >
+            <button onclick="toggleMovement()">
                 Show Movement
             </button>
 
@@ -382,13 +357,6 @@
                     class="team-name-input"
                 >
 
-                <div
-                    id="teamAScore"
-                    class="score-number"
-                >
-                    0
-                </div>
-
             </div>
 
 
@@ -396,16 +364,12 @@
 
                 <div>
                     Set
-                    <span id="currentSet">
-                        1
-                    </span>
+                    <span id="currentSet">1</span>
                 </div>
 
                 <div>
                     Sets
-                    <span id="setsScore">
-                        0 - 0
-                    </span>
+                    <span id="setsScore">0 - 0</span>
                 </div>
 
                 <div>
@@ -426,29 +390,32 @@
                     class="team-name-input"
                 >
 
-                <div
-                    id="teamBScore"
-                    class="score-number"
-                >
-                    0
-                </div>
-
             </div>
 
         </div>
 
 
+        <!-- ============================= -->
         <!-- SCORE BUTTONS -->
+        <!-- ============================= -->
 
         <div class="score-buttons">
 
             <div class="team-score-controls">
 
+                <!--
+                    The button text is now the
+                    team's CURRENT SCORE.
+
+                    Clicking it adds one point.
+                -->
+
                 <button
+                    id="teamAScoreButton"
                     class="point-button team-a"
                     onclick="addPoint('A')"
                 >
-                    +1
+                    0
                 </button>
 
                 <button
@@ -464,10 +431,11 @@
             <div class="team-score-controls">
 
                 <button
+                    id="teamBScoreButton"
                     class="point-button team-b"
                     onclick="addPoint('B')"
                 >
-                    +1
+                    0
                 </button>
 
                 <button
@@ -491,15 +459,11 @@
 
         <div class="score-options">
 
-            <button
-                onclick="resetSet()"
-            >
+            <button onclick="resetSet()">
                 Reset Set
             </button>
 
-            <button
-                onclick="resetMatch()"
-            >
+            <button onclick="resetMatch()">
                 Reset Match
             </button>
 
@@ -524,7 +488,7 @@
     </span>
 
     <span>
-        Version 1.1
+        Version 1.2
     </span>
 
 </footer>
