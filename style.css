@@ -759,3 +759,69 @@ footer {
     }
 
 }
+
+/* =========================================
+   VERSION 1.3
+   LARGE SCORE BUTTONS FOR MOBILE LANDSCAPE
+   ========================================= */
+
+@media screen and (orientation: landscape) and (max-height: 600px) {
+
+    /* Make the score area use almost the entire screen */
+    #scoreScreen .score-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+        height: calc(100vh - 140px);
+        min-height: 0;
+        margin: 0;
+    }
+
+    /* Each team's score + -1 button */
+    #scoreScreen .team-score-controls {
+        display: grid;
+        grid-template-columns: 1fr 50px;
+        gap: 5px;
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+    }
+
+    /* The BIG score button */
+    #scoreScreen .point-button {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        padding: 0;
+        font-size: clamp(80px, 18vw, 160px);
+        font-weight: bold;
+        border-radius: 10px;
+    }
+
+    /* The -1 button */
+    #scoreScreen .minus-button {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        padding: 0;
+        font-size: 28px;
+        border-radius: 10px;
+    }
+
+    /* Make the information above the buttons smaller */
+    #scoreScreen .scoreboard {
+        padding: 5px;
+        margin-bottom: 5px;
+    }
+
+    #scoreScreen .scoreboard h2 {
+        font-size: 20px;
+        margin: 2px 0;
+    }
+
+    #scoreScreen .scoreboard p {
+        font-size: 13px;
+        margin: 2px 0;
+    }
+}
