@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 1.1
+   VERSION 1.2
    ========================================= */
 
 
@@ -68,15 +68,6 @@ let libero = {
    ========================================= */
 
 let usingLibero = false;
-
-
-/*
-    The libero is NOT stored as a seventh
-    rotational player.
-
-    Instead, we remember which middle blocker
-    the libero is temporarily replacing.
-*/
 
 let liberoState = {
     active: false,
@@ -199,7 +190,11 @@ function chooseSystem(selectedSystem) {
         document
             .getElementById("selectedSystemText")
             .textContent =
-                `Selected system: ${system === 5 ? "5–1" : "6–2"}`;
+                `Selected system: ${
+                    system === 5
+                        ? "5–1"
+                        : "6–2"
+                }`;
 
     } else {
 
@@ -217,10 +212,12 @@ function setLiberoUsage(value) {
 
     usingLibero = value;
 
+
     const yesButton =
         document.getElementById(
             "liberoYesButton"
         );
+
 
     const noButton =
         document.getElementById(
@@ -253,14 +250,22 @@ function openPlayerInputs() {
     hideAllScreens();
 
     document
-        .getElementById("playerSetupScreen")
+        .getElementById(
+            "playerSetupScreen"
+        )
         .classList.remove("hidden");
 
 
     document
-        .getElementById("playerSystemText")
+        .getElementById(
+            "playerSystemText"
+        )
         .textContent =
-            `Player setup for the ${system === 5 ? "5–1" : "6–2"} system.`;
+            `Player setup for the ${
+                system === 5
+                    ? "5–1"
+                    : "6–2"
+            } system.`;
 
 
     const container =
@@ -277,7 +282,9 @@ function openPlayerInputs() {
         const row =
             document.createElement("div");
 
-        row.className = "player-row";
+
+        row.className =
+            "player-row";
 
 
         row.innerHTML = `
@@ -362,14 +369,18 @@ function savePlayers() {
 
     libero.name =
         document
-            .getElementById("libero-name")
+            .getElementById(
+                "libero-name"
+            )
             .value
             .trim();
 
 
     libero.jersey =
         document
-            .getElementById("libero-jersey")
+            .getElementById(
+                "libero-jersey"
+            )
             .value
             .trim();
 
@@ -448,7 +459,7 @@ function loadSavedPlayers() {
 
 
 /* =========================================
-   ROTATION START
+   START ROTATION
    ========================================= */
 
 function startRotation() {
@@ -462,17 +473,6 @@ function startRotation() {
                 .value
         );
 
-
-    /*
-        0-based rotation.
-
-        If setter starts at position 1:
-
-        Position 1 -> index 0
-        Position 6 -> index 5
-        Position 5 -> index 4
-        etc.
-    */
 
     courtPos = [];
 
@@ -522,7 +522,11 @@ function startRotation() {
             "rotationSystemTitle"
         )
         .textContent =
-            `${system === 5 ? "5–1" : "6–2"} Rotation`;
+            `${
+                system === 5
+                    ? "5–1"
+                    : "6–2"
+            } Rotation`;
 
 
     displayCourt();
@@ -546,23 +550,13 @@ function updateLibero() {
 
 
     /*
-        Court array indexes:
-
-        0 = Position 1
-        1 = Position 2
-        2 = Position 3
-        3 = Position 4
-        4 = Position 5
-        5 = Position 6
-
-
         Back row:
 
         Position 1
         Position 5
         Position 6
 
-        Therefore:
+        Array indexes:
 
         0, 4, 5
     */
@@ -571,9 +565,9 @@ function updateLibero() {
 
 
     /*
-        If the libero is already replacing
-        a middle, check whether that middle
-        has moved to the front row.
+        Check whether the middle currently
+        being replaced has reached the
+        front row.
     */
 
     if (
@@ -594,13 +588,6 @@ function updateLibero() {
             )
         ) {
 
-            /*
-                The middle is now in the
-                front row.
-
-                The libero comes off.
-            */
-
             liberoState.active = false;
 
             liberoState.replacedMiddle = null;
@@ -609,8 +596,8 @@ function updateLibero() {
 
 
     /*
-        If the libero isn't currently on,
-        look for a middle in the back row.
+        Look for a middle blocker in the
+        back row.
     */
 
     if (!liberoState.active) {
@@ -652,7 +639,7 @@ function updateLibero() {
 
 
 /* =========================================
-   ROTATE FORWARD
+   ROTATION FORWARD
    ========================================= */
 
 function nextRotation() {
@@ -674,13 +661,12 @@ function nextRotation() {
 
     updateLibero();
 
-
     displayCourt();
 }
 
 
 /* =========================================
-   ROTATE BACKWARD
+   ROTATION BACKWARD
    ========================================= */
 
 function previousRotation() {
@@ -701,12 +687,13 @@ function previousRotation() {
 
 
     if (rotationNumber < 1) {
+
         rotationNumber = 6;
+
     }
 
 
     updateLibero();
-
 
     displayCourt();
 }
@@ -782,9 +769,8 @@ function displayCourt() {
 
 
         /*
-            If this player is the middle
-            being replaced, display the
-            libero instead.
+            Display the libero in the
+            middle's court position.
         */
 
         if (
@@ -811,8 +797,9 @@ function displayCourt() {
 
 
         /*
-            If no name/number has been
-            entered, use the role.
+            If no name or number has been
+            entered, use the position
+            abbreviation.
         */
 
         if (
@@ -831,13 +818,15 @@ function displayCourt() {
 
                 ${
                     displayNumber
-                        ? "#" + escapeHtml(
-                            displayNumber
-                        )
+                        ? "#" +
+                          escapeHtml(
+                              displayNumber
+                          )
                         : displayName
                 }
 
             </div>
+
 
             ${
                 displayNumber
@@ -851,6 +840,7 @@ function displayCourt() {
                     `
                     : ""
             }
+
 
             <div class="player-role">
                 ${displayRole}
@@ -872,18 +862,6 @@ function displayCourt() {
         )
         .textContent =
             `Rotation ${rotationNumber}`;
-
-
-    /*
-        6–2 special display.
-
-        The rotation itself is still based
-        on the player's actual rotational
-        position. This means the setter can
-        naturally appear in the back row
-        rather than being forced into the
-        front row.
-    */
 }
 
 
@@ -1086,11 +1064,6 @@ function openScorekeeper() {
 
 function addPoint(team) {
 
-    /*
-        Don't allow points after the
-        match has finished.
-    */
-
     if (
         setsWonA >= 3 ||
         setsWonB >= 3
@@ -1151,18 +1124,6 @@ function removePoint(team) {
    ========================================= */
 
 function checkSetWinner() {
-
-    /*
-        Sets 1–4:
-
-        First to 25
-        Win by 2
-
-        Set 5:
-
-        First to 15
-        Win by 2
-    */
 
     const pointsNeeded =
         currentSet === 5
@@ -1231,10 +1192,6 @@ function finishSet(winner) {
             : teamBName;
 
 
-    /*
-        MATCH WON
-    */
-
     if (
         setsWonA >= 3 ||
         setsWonB >= 3
@@ -1247,15 +1204,12 @@ function finishSet(winner) {
             .textContent =
                 `${winnerName} won the match!`;
 
+
         updateScoreDisplay();
 
         return;
     }
 
-
-    /*
-        NEXT SET
-    */
 
     document
         .getElementById(
@@ -1266,7 +1220,6 @@ function finishSet(winner) {
 
 
     currentSet++;
-
 
     teamAScore = 0;
 
@@ -1301,9 +1254,26 @@ function updateScoreDisplay() {
         "Team B";
 
 
+    /*
+        =====================================
+        IMPORTANT VERSION 1.2 CHANGE
+        =====================================
+
+        The large red/blue buttons now show
+        the CURRENT SCORE.
+
+        So if Team A has 14 points:
+
+                    [ 14 ]
+
+        Clicking it makes it:
+
+                    [ 15 ]
+    */
+
     document
         .getElementById(
-            "teamAScore"
+            "teamAScoreButton"
         )
         .textContent =
             teamAScore;
@@ -1311,7 +1281,7 @@ function updateScoreDisplay() {
 
     document
         .getElementById(
-            "teamBScore"
+            "teamBScoreButton"
         )
         .textContent =
             teamBScore;
