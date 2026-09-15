@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 1.3
+   VERSION 1.2
    ========================================= */
 
 
@@ -192,8 +192,8 @@ function chooseSystem(selectedSystem) {
             .textContent =
                 `Selected system: ${
                     system === 5
-                        ? "5–1"
-                        : "6–2"
+                        ? "5â€“1"
+                        : "6â€“2"
                 }`;
 
     } else {
@@ -263,8 +263,8 @@ function openPlayerInputs() {
         .textContent =
             `Player setup for the ${
                 system === 5
-                    ? "5–1"
-                    : "6–2"
+                    ? "5â€“1"
+                    : "6â€“2"
             } system.`;
 
 
@@ -524,8 +524,8 @@ function startRotation() {
         .textContent =
             `${
                 system === 5
-                    ? "5–1"
-                    : "6–2"
+                    ? "5â€“1"
+                    : "6â€“2"
             } Rotation`;
 
 
