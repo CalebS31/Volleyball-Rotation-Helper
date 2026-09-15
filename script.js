@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 1.2
+   VERSION 1.7
    ========================================= */
 
 
@@ -192,8 +192,8 @@ function chooseSystem(selectedSystem) {
             .textContent =
                 `Selected system: ${
                     system === 5
-                        ? "5â€“1"
-                        : "6â€“2"
+                        ? "5–1"
+                        : "6–2"
                 }`;
 
     } else {
@@ -263,8 +263,8 @@ function openPlayerInputs() {
         .textContent =
             `Player setup for the ${
                 system === 5
-                    ? "5â€“1"
-                    : "6â€“2"
+                    ? "5–1"
+                    : "6–2"
             } system.`;
 
 
@@ -524,8 +524,8 @@ function startRotation() {
         .textContent =
             `${
                 system === 5
-                    ? "5â€“1"
-                    : "6â€“2"
+                    ? "5–1"
+                    : "6–2"
             } Rotation`;
 
 
@@ -782,7 +782,7 @@ function displayCourt() {
 
             displayName =
                 libero.name ||
-                "Libero";
+                "LIB";
 
 
             displayNumber =
@@ -1256,7 +1256,7 @@ function updateScoreDisplay() {
 
     /*
         =====================================
-        IMPORTANT VERSION 1.2 CHANGE
+        IMPORTANT VERSION 1.7 CHANGE
         =====================================
 
         The large red/blue buttons now show
