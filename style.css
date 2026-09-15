@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 1.3
+   VERSION 1.2
    ========================================= */
 
 * {
@@ -20,6 +20,7 @@ body {
     color: #222;
 }
 
+
 /* =========================================
    HEADER
    ========================================= */
@@ -27,8 +28,10 @@ body {
 .top-bar {
     min-height: 80px;
     padding: 15px 25px;
+
     background: #181818;
     color: white;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -50,6 +53,7 @@ body {
     border: 1px solid #777;
     border-radius: 7px;
 }
+
 
 /* =========================================
    GENERAL
@@ -75,9 +79,13 @@ main {
     max-width: 600px;
     margin: 40px auto;
     padding: 35px;
+
     background: white;
     border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.12);
 }
 
 h2 {
@@ -88,11 +96,17 @@ h2 {
 button {
     border: none;
     border-radius: 9px;
+
     padding: 14px 20px;
+
     font-size: 16px;
     font-weight: bold;
+
     cursor: pointer;
-    transition: transform 0.15s, opacity 0.15s;
+
+    transition:
+        transform 0.15s,
+        opacity 0.15s;
 }
 
 button:hover {
@@ -109,6 +123,7 @@ button:active {
     display: block;
     width: 100%;
     margin: 15px 0;
+
     background: #222;
     color: white;
 }
@@ -120,6 +135,7 @@ button:active {
     margin-top: 15px;
 }
 
+
 /* =========================================
    SYSTEM SETUP
    ========================================= */
@@ -127,6 +143,7 @@ button:active {
 .system-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
+
     gap: 20px;
     margin: 30px 0;
 }
@@ -134,9 +151,11 @@ button:active {
 .system-buttons button {
     background: #222;
     color: white;
+
     font-size: 24px;
     padding: 30px;
 }
+
 
 /* =========================================
    FORM
@@ -144,7 +163,9 @@ button:active {
 
 label {
     display: block;
+
     font-weight: bold;
+
     margin-top: 20px;
     margin-bottom: 8px;
 }
@@ -152,16 +173,22 @@ label {
 input,
 select {
     width: 100%;
+
     padding: 12px;
+
     border: 1px solid #bbb;
     border-radius: 7px;
+
     font-size: 16px;
 }
 
 .player-row {
     display: grid;
+
     grid-template-columns: 1fr 100px;
+
     gap: 10px;
+
     margin-bottom: 10px;
 }
 
@@ -172,12 +199,15 @@ select {
 .libero-input {
     margin-top: 20px;
     padding-top: 15px;
+
     border-top: 2px solid #ddd;
 }
 
 .libero-choice {
     display: grid;
+
     grid-template-columns: 1fr 1fr;
+
     gap: 10px;
 }
 
@@ -186,14 +216,17 @@ select {
     color: white;
 }
 
+
 /* =========================================
    ROTATION SCREEN
    ========================================= */
 
 .rotation-header {
     display: flex;
+
     align-items: center;
     justify-content: space-between;
+
     margin-bottom: 20px;
 }
 
@@ -217,6 +250,7 @@ select {
     color: #666;
 }
 
+
 /* =========================================
    VOLLEYBALL COURT
    ========================================= */
@@ -224,73 +258,32 @@ select {
 .volleyball-court {
     position: relative;
 
-    width: min(700px, 100%);
-    aspect-ratio: 1 / 1;
+    width: min(850px, 100%);
+    height: 600px;
 
     margin: 0 auto;
 
-    background: #46aeb0;
+    background: #e2e2e2;
+
+    border: 5px solid #222;
 
     overflow: hidden;
 }
-``
 
 .net {
     position: absolute;
 
-    left: 20%;
-    right: 20%;
-
+    left: 0;
+    right: 0;
     top: 50%;
 
-    height: 3px;
+    height: 8px;
 
-    background: white;
+    background: #222;
 
     z-index: 2;
 }
 
-/* =========================================
-   COURT DRAWING
-   VERSION 1.4
-   ========================================= */
-
-.volleyball-court::before {
-    content: "";
-
-    position: absolute;
-
-    left: 20%;
-    right: 20%;
-
-    top: 8%;
-    bottom: 8%;
-
-    background: #c9965d;
-
-    border: 3px solid white;
-
-    z-index: 1;
-}
-
-.volleyball-court::after {
-    content: "";
-
-    position: absolute;
-
-    left: 20%;
-    right: 20%;
-
-    top: 50%;
-
-    height: 3px;
-
-    background: white;
-
-    transform: translateY(-50%);
-
-    z-index: 1;
-}
 
 /* =========================================
    PLAYER CIRCLES
@@ -298,19 +291,36 @@ select {
 
 .court-player {
     position: absolute;
-    width: 85px;
-    height: 85px;
+
+    width: 110px;
+    height: 110px;
+
     border-radius: 50%;
+
     background: white;
+
     border: 4px solid #222;
+
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     justify-content: center;
+
     text-align: center;
+
     z-index: 5;
-    transition: left 0.6s ease, top 0.6s ease, transform 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+    transition:
+        left 0.6s ease,
+        top 0.6s ease,
+        transform 0.3s ease;
+
+    box-shadow:
+        0 4px 10px
+        rgba(0, 0, 0, 0.2);
 }
 
 .court-player:hover {
@@ -324,54 +334,60 @@ select {
 
 .player-name {
     max-width: 90px;
+
     font-size: 13px;
     font-weight: bold;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
+
     white-space: nowrap;
 }
 
 .player-role {
     font-size: 11px;
+
     margin-top: 3px;
+
     color: #555;
 }
+
 
 /* =========================================
    COURT POSITIONS
    ========================================= */
 
 .pos4 {
-    left: 24%;
-    top: 20%;
+    left: 10%;
+    top: 17%;
 }
 
 .pos3 {
-    left: 50%;
-    top: 20%;
-    transform: translateX(-50%);
+    left: calc(50% - 55px);
+    top: 17%;
 }
 
 .pos2 {
-    right: 24%;
-    top: 20%;
+    right: 10%;
+    top: 17%;
 }
 
 .pos5 {
-    left: 24%;
-    bottom: 20%;
+    left: 10%;
+    bottom: 17%;
 }
 
 .pos6 {
-    left: 50%;
-    bottom: 20%;
-    transform: translateX(-50%);
+    left: calc(50% - 55px);
+    bottom: 17%;
 }
 
 .pos1 {
-    right: 24%;
-    bottom: 20%;
+    right: 10%;
+    bottom: 17%;
 }
+
 
 /* =========================================
    LIBERO
@@ -382,15 +398,20 @@ select {
     background: #f5f5f5;
 }
 
+
 /* =========================================
    COURT CONTROLS
    ========================================= */
 
 .court-controls {
     display: flex;
+
     justify-content: center;
+
     gap: 10px;
+
     flex-wrap: wrap;
+
     margin-top: 20px;
 }
 
@@ -401,11 +422,16 @@ select {
 
 .animation-info {
     text-align: center;
+
     margin-top: 15px;
+
     padding: 12px;
+
     background: white;
+
     border-radius: 8px;
 }
+
 
 /* =========================================
    MOVEMENT ANIMATION
@@ -416,10 +442,13 @@ select {
 }
 
 .movement-active .court-player {
-    animation: playerMove 1.2s ease-in-out infinite alternate;
+    animation:
+        playerMove 1.2s ease-in-out
+        infinite alternate;
 }
 
 @keyframes playerMove {
+
     from {
         transform: translateY(0);
     }
@@ -427,7 +456,9 @@ select {
     to {
         transform: translateY(-12px);
     }
+
 }
+
 
 /* =========================================
    SCOREKEEPER
@@ -438,24 +469,41 @@ select {
     margin: 0 auto;
 }
 
+
 .score-header {
     display: grid;
-    grid-template-columns: 1fr 200px 1fr;
+
+    grid-template-columns:
+        1fr 200px 1fr;
+
     gap: 20px;
+
     align-items: center;
+
     text-align: center;
+
     background: white;
+
     border-radius: 15px;
+
     padding: 20px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.12);
 }
+
 
 .team-name-input {
     width: 90%;
+
     text-align: center;
+
     font-size: 22px;
+
     font-weight: bold;
 }
+
 
 /* =========================================
    SCORE BUTTONS
@@ -463,24 +511,41 @@ select {
 
 .score-buttons {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+
+    grid-template-columns:
+        1fr 1fr;
+
     gap: 30px;
+
     margin-top: 25px;
 }
 
+
 .team-score-controls {
     display: grid;
-    grid-template-columns: 1fr 130px;
+
+    grid-template-columns:
+        1fr 130px;
+
     gap: 12px;
 }
 
+
+/*
+    The large button IS the score.
+
+    Team A = red
+    Team B = blue
+*/
+
 .point-button {
-    min-height: 160px;
-    font-size: 72px;
+    min-height: 220px;
+
+    font-size: 100px;
+
     color: white;
+
     font-weight: bold;
-    text-align: center;
-    user-select: none;
 }
 
 .point-button.team-a {
@@ -489,14 +554,29 @@ select {
 
 .point-button.team-b {
     background: #1565c0;
+
+
+/* Make the score easy to read */
+    text-align: center;
+
+    user-select: none;
 }
 
+
+/*
+    Minus buttons stay as -1.
+*/
+
 .minus-button {
-    min-height: 160px;
+    min-height: 220px;
+
     font-size: 40px;
+
     background: #555;
+
     color: white;
 }
+
 
 /* =========================================
    SCORE MESSAGE
@@ -504,16 +584,24 @@ select {
 
 .set-message {
     text-align: center;
+
     min-height: 40px;
+
     margin: 20px 0;
+
     font-size: 20px;
+
     font-weight: bold;
 }
 
+
 .score-options {
     display: flex;
+
     justify-content: center;
+
     gap: 10px;
+
     flex-wrap: wrap;
 }
 
@@ -526,17 +614,52 @@ select {
     width: auto;
 }
 
+
 /* =========================================
    FOOTER
    ========================================= */
 
 footer {
     display: flex;
+
     justify-content: center;
+
     gap: 20px;
+
     padding: 20px;
+
     color: #777;
 }
+
+
+/* =========================================
+   LANDSCAPE
+   ========================================= */
+
+@media (orientation: landscape) {
+
+    .score-screen {
+        padding-bottom: 10px;
+    }
+
+    .score-header {
+        padding: 12px;
+    }
+
+    .point-button,
+    .minus-button {
+        min-height: 150px;
+    }
+
+    .point-button {
+        font-size: 75px;
+    }
+
+    .minus-button {
+        font-size: 35px;
+    }
+}
+
 
 /* =========================================
    MOBILE
@@ -568,7 +691,9 @@ footer {
 
     .rotation-header {
         flex-direction: column;
+
         gap: 15px;
+
         align-items: stretch;
     }
 
@@ -600,7 +725,9 @@ footer {
     }
 
     .score-header {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns:
+            1fr 1fr;
+
         gap: 10px;
     }
 
@@ -608,6 +735,10 @@ footer {
         grid-column: 1 / -1;
         grid-row: 2;
     }
+
+    /*
+        Large score buttons on mobile.
+    */
 
     .score-buttons {
         gap: 10px;
@@ -626,69 +757,71 @@ footer {
         min-height: 65px;
         font-size: 30px;
     }
+
 }
 
 /* =========================================
    VERSION 1.3
-   MOBILE LANDSCAPE SCOREBOARD
+   LARGE SCORE BUTTONS FOR MOBILE LANDSCAPE
    ========================================= */
 
-@media screen and (max-width: 900px) and (orientation: landscape) {
+@media screen and (orientation: landscape) and (max-height: 600px) {
 
-    #scoreScreen {
-        padding: 5px;
-    }
-
-    #scoreScreen .score-header {
-        padding: 8px;
-        margin-bottom: 8px;
-    }
-
-    #scoreScreen .team-name-input {
-        font-size: 18px;
-    }
-
+    /* Make the score area use almost the entire screen */
     #scoreScreen .score-buttons {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 8px;
         width: 100%;
-        height: calc(100vh - 180px);
+        height: calc(100vh - 140px);
+        min-height: 0;
         margin: 0;
     }
 
+    /* Each team's score + -1 button */
     #scoreScreen .team-score-controls {
         display: grid;
-        grid-template-columns: 1fr 60px;
+        grid-template-columns: 1fr 50px;
         gap: 5px;
+        width: 100%;
         height: 100%;
+        min-height: 0;
     }
 
+    /* The BIG score button */
     #scoreScreen .point-button {
         width: 100%;
         height: 100%;
         min-height: 0;
         padding: 0;
-        font-size: clamp(90px, 15vw, 180px);
-        border-radius: 12px;
+        font-size: clamp(80px, 18vw, 160px);
+        font-weight: bold;
+        border-radius: 10px;
     }
 
+    /* The -1 button */
     #scoreScreen .minus-button {
         width: 100%;
         height: 100%;
         min-height: 0;
         padding: 0;
-        font-size: 32px;
-        border-radius: 12px;
+        font-size: 28px;
+        border-radius: 10px;
     }
 
-    #scoreScreen .set-message {
-        margin: 8px 0;
-        min-height: 20px;
-        font-size: 16px;
+    /* Make the information above the buttons smaller */
+    #scoreScreen .scoreboard {
+        padding: 5px;
+        margin-bottom: 5px;
     }
 
-    #scoreScreen .score-options {
-        margin-top: 8px;
+    #scoreScreen .scoreboard h2 {
+        font-size: 20px;
+        margin: 2px 0;
+    }
+
+    #scoreScreen .scoreboard p {
+        font-size: 13px;
+        margin: 2px 0;
     }
 }
