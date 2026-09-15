@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 1.7
+   VERSION 1.8
    ========================================= */
 
 
@@ -1256,7 +1256,7 @@ function updateScoreDisplay() {
 
     /*
         =====================================
-        IMPORTANT VERSION 1.7 CHANGE
+        IMPORTANT VERSION 1.8 CHANGE
         =====================================
 
         The large red/blue buttons now show
