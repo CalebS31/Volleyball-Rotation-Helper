@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 1.8
+   VERSION 1.9
    ========================================= */
 
 
@@ -492,7 +492,13 @@ function startRotation() {
     }
 
 
-    rotationNumber = 1;
+    /*
+        The rotation number is the setter's CURRENT
+        court position, not a counter that increases
+        every time the Rotate button is pressed.
+    */
+    rotationNumber =
+        getCurrentRotationNumber();
 
 
     liberoState.active = false;
@@ -639,6 +645,93 @@ function updateLibero() {
 
 
 /* =========================================
+   CURRENT ROTATION NUMBER
+   ========================================= */
+
+/*
+    The number shown in the corner represents
+    the setter's CURRENT court position.
+
+    5–1:
+        There is one setter, so the number is
+        wherever that setter currently is.
+
+    6–2:
+        There are two setters. The rotation number
+        follows whichever setter is currently in
+        the back row (positions 5, 6, or 1).
+*/
+function getCurrentRotationNumber() {
+
+    if (courtPos.length !== 6) {
+        return 1;
+    }
+
+
+    const backRow =
+        [0, 4, 5];
+
+
+    if (system === 6) {
+
+        /*
+            In a 6–2, only the setter in the
+            back row is the active setter.
+        */
+        for (const positionIndex of backRow) {
+
+            const playerIndex =
+                courtPos[positionIndex];
+
+
+            const role =
+                positions[playerIndex];
+
+
+            if (
+                role === "Setter 1" ||
+                role === "Setter 2"
+            ) {
+
+                return positionIndex + 1;
+            }
+        }
+
+    } else {
+
+        /*
+            In a 5–1 there is only one setter.
+        */
+        for (
+            let positionIndex = 0;
+            positionIndex < courtPos.length;
+            positionIndex++
+        ) {
+
+            const playerIndex =
+                courtPos[positionIndex];
+
+
+            if (
+                positions[playerIndex] ===
+                "Setter"
+            ) {
+
+                return positionIndex + 1;
+            }
+        }
+    }
+
+
+    /*
+        Fallback if the setup does not currently
+        contain the expected setter.
+    */
+    return rotationNumber || 1;
+}
+
+
+/* =========================================
    ROTATION FORWARD
    ========================================= */
 
@@ -656,7 +749,12 @@ function nextRotation() {
     courtPos.push(first);
 
 
-    rotationNumber++;
+    /*
+        Recalculate from the setter's actual
+        position after the rotation.
+    */
+    rotationNumber =
+        getCurrentRotationNumber();
 
 
     updateLibero();
@@ -683,14 +781,12 @@ function previousRotation() {
     courtPos.unshift(last);
 
 
-    rotationNumber--;
-
-
-    if (rotationNumber < 1) {
-
-        rotationNumber = 6;
-
-    }
+    /*
+        Recalculate from the setter's actual
+        position after the reverse rotation.
+    */
+    rotationNumber =
+        getCurrentRotationNumber();
 
 
     updateLibero();
@@ -704,6 +800,10 @@ function previousRotation() {
    ========================================= */
 
 function displayCourt() {
+
+    rotationNumber =
+        getCurrentRotationNumber();
+
 
     const courtElements = {
 
