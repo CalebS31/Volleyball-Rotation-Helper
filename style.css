@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 1.8
+   VERSION 2.0
    ========================================= */
 
 * {
@@ -452,33 +452,33 @@ select {
    ========================================= */
 
 .pos4 {
-    left: 12%;
-    top: calc(33.3333% - 40px);
+    left: calc(20% - 40px);
+    top: calc(20% - 40px);
 }
 
 .pos3 {
     left: calc(50% - 40px);
-    top: calc(33.3333% - 40px);
+    top: calc(20% - 40px);
 }
 
 .pos2 {
-    right: 12%;
-    top: calc(33.3333% - 40px);
+    left: calc(80% - 40px);
+    top: calc(20% - 40px);
 }
 
 .pos5 {
-    left: 12%;
-    top: 62%;
+    left: calc(20% - 40px);
+    top: calc(65% - 40px);
 }
 
 .pos6 {
     left: calc(50% - 40px);
-    top: 62%;
+    top: calc(75% - 40px);
 }
 
 .pos1 {
-    right: 12%;
-    top: 62%;
+    left: calc(80% - 40px);
+    top: calc(65% - 40px);
 }
 
 
@@ -527,35 +527,54 @@ select {
 
 
 /* =========================================
-   MOVEMENT ANIMATION
+   SERVE RECEIVE / MOVEMENT ANIMATION
    ========================================= */
 
 .serve-receive .court-player {
-    transform: scale(0.9);
+    transform: scale(0.98);
+    cursor: pointer;
+}
+
+.serve-receive .court-player:hover {
+    transform: scale(1.06);
+}
+
+.court-player.movement-ghost {
+    position: absolute;
+
+    opacity: 0.32;
+
+    pointer-events: none;
+
+    z-index: 20;
+
+    border-style: dashed;
+
+    box-shadow:
+        0 2px 8px
+        rgba(0, 0, 0, 0.12);
+
+    transform: none;
+
+    transition: none;
 }
 
 .movement-active .court-player {
-    animation:
-        playerMove 1.2s ease-in-out
-        infinite alternate;
+    transition:
+        left 1.2s ease-in-out,
+        top 1.2s ease-in-out,
+        transform 0.2s ease;
 }
 
-@keyframes playerMove {
-
-    from {
-        transform: translateY(0);
-    }
-
-    to {
-        transform: translateY(-12px);
-    }
-
+.movement-active .court-player:hover {
+    transform: scale(1.06);
 }
 
 
 /* =========================================
    SCOREKEEPER
    ========================================= */
+
 
 .score-screen {
     max-width: 1200px;
