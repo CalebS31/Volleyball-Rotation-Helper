@@ -3,571 +3,1965 @@
    VERSION 1.12
    ========================================= */
 
-* {
-    box-sizing: border-box;
-}
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-    min-height: 100%;
-}
+/* =========================================
+   SYSTEM POSITIONS
+   ========================================= */
 
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f1f3f5;
-    color: #222;
-}
+const positions51 = [
+    "Setter",
+    "Middle 1",
+    "Left Side 2",
+    "Right Side",
+    "Middle 2",
+    "Left Side 1"
+];
+
+
+const positions62 = [
+    "Setter 1",
+    "Middle 1",
+    "Left Side 2",
+    "Setter 2",
+    "Middle 2",
+    "Left Side 1"
+];
+
+
+let positions = [];
+
+let system = 0;
 
 
 /* =========================================
-   HEADER
+   PLAYER DATA
    ========================================= */
 
-.top-bar {
-    min-height: 80px;
-    padding: 15px 25px;
-
-    background: #181818;
-    color: white;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.top-bar h1 {
-    margin: 0;
-    font-size: 25px;
-}
-
-.top-bar p {
-    margin: 4px 0 0;
-    opacity: 0.75;
-}
-
-.version {
-    font-weight: bold;
-    padding: 8px 12px;
-    border: 1px solid #777;
-    border-radius: 7px;
-}
-
-
-/* =========================================
-   GENERAL
-   ========================================= */
-
-main {
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 30px 20px;
-}
-
-.hidden {
-    display: none !important;
-}
-
-.screen {
-    width: 100%;
-}
-
-.menu-card,
-.setup-card {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 35px;
-
-    background: white;
-    border-radius: 15px;
-
-    box-shadow:
-        0 5px 20px
-        rgba(0, 0, 0, 0.12);
-}
-
-h2 {
-    margin-top: 0;
-    text-align: center;
-}
-
-button {
-    border: none;
-    border-radius: 9px;
-
-    padding: 14px 20px;
-
-    font-size: 16px;
-    font-weight: bold;
-
-    cursor: pointer;
-
-    transition:
-        transform 0.15s,
-        opacity 0.15s;
-}
-
-button:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
-}
-
-button:active {
-    transform: scale(0.97);
-}
-
-.menu-button,
-.main-button {
-    display: block;
-    width: 100%;
-    margin: 15px 0;
-
-    background: #222;
-    color: white;
-}
-
-.back-button {
-    background: #777;
-    color: white;
-    width: 100%;
-    margin-top: 15px;
-}
-
-
-/* =========================================
-   SYSTEM SETUP
-   ========================================= */
-
-.system-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-
-    gap: 20px;
-    margin: 30px 0;
-}
-
-.system-buttons button {
-    background: #222;
-    color: white;
-
-    font-size: 24px;
-    padding: 30px;
-}
-
-
-/* =========================================
-   FORM
-   ========================================= */
-
-label {
-    display: block;
-
-    font-weight: bold;
-
-    margin-top: 20px;
-    margin-bottom: 8px;
-}
-
-input,
-select {
-    width: 100%;
-
-    padding: 12px;
-
-    border: 1px solid #bbb;
-    border-radius: 7px;
-
-    font-size: 16px;
-}
-
-.player-row {
-    display: grid;
-
-    grid-template-columns: 1fr 100px;
-
-    gap: 10px;
-
-    margin-bottom: 10px;
-}
-
-.player-row input {
-    margin: 0;
-}
-
-.libero-input {
-    margin-top: 20px;
-    padding-top: 15px;
-
-    border-top: 2px solid #ddd;
-}
-
-.libero-choice {
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 10px;
-}
-
-.libero-choice button {
-    background: #444;
-    color: white;
-}
-
-
-/* =========================================
-   ROTATION SCREEN
-   ========================================= */
-
-.rotation-header {
-    display: flex;
-
-    align-items: center;
-    justify-content: space-between;
-
-    margin-bottom: 20px;
-}
-
-.rotation-header h2 {
-    text-align: left;
-    margin: 0;
-}
-
-.rotation-actions {
-    display: flex;
-    gap: 10px;
-}
-
-.rotation-actions button {
-    background: #222;
-    color: white;
-}
-
-#rotationCounter {
-    font-weight: bold;
-    color: #666;
-}
-
-
-/* =========================================
-   VOLLEYBALL COURT
-   ========================================= */
-
-.volleyball-court {
-    position: relative;
-
-    width: min(700px, 100%);
-    aspect-ratio: 1 / 1;
-    height: auto;
-
-    margin: 0 auto;
-
-    background: #d19a5d;
-
-    border: 4px solid white;
-
-    /*
-       Small teal/blue-green free space around the court,
-       matching the supplied reference image.
-    */
-    box-shadow: 0 0 0 18px #3fa9ad;
-
-    overflow: visible;
-}
-
-.net {
-    position: absolute;
-
-    left: -4px;
-    right: -4px;
-    top: -4px;
-
-    height: 7px;
-
-    background: white;
-
-    z-index: 2;
-}
-
-
-/* =========================================
-   COURT MARKINGS
-   ========================================= */
-
-.court-surface {
-    position: absolute;
-    inset: 0;
-
-    background: #d19a5d;
-
-    z-index: 0;
-}
-
-.attack-line {
-    position: absolute;
-
-    left: 0;
-    right: 0;
-    top: 33.3333%;
-
-    height: 4px;
-
-    background: white;
-
-    z-index: 1;
-}
-
-.attack-extension {
-    position: absolute;
-
-    top: calc(33.3333% - 2px);
-
-    width: 50px;
-    height: 4px;
-
-    background: repeating-linear-gradient(
-        to right,
-        white 0,
-        white 8px,
-        transparent 8px,
-        transparent 14px
-    );
-
-    z-index: 1;
-}
-
-.attack-extension-left {
-    left: -50px;
-}
-
-.attack-extension-right {
-    right: -50px;
-}
-
-.service-marker {
-    position: absolute;
-
-    /*
-       Service-zone markers sit at the two ends of the
-       baseline, just outside the court.
-    */
-    bottom: -14px;
-
-    width: 4px;
-    height: 10px;
-
-    background: repeating-linear-gradient(
-        to bottom,
-        white 0,
-        white 4px,
-        transparent 4px,
-        transparent 7px
-    );
-
-    z-index: 3;
-}
-
-.service-marker-left {
-    left: -2px;
-}
-
-.service-marker-right {
-    right: -2px;
-}
-
-
-/* =========================================
-   PLAYER CIRCLES
-   ========================================= */
-
-.court-player {
-    position: absolute;
-
-    width: 80px;
-    height: 80px;
-
-    border-radius: 50%;
-
-    background: white;
-
-    border: 4px solid #222;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    text-align: center;
-
-    z-index: 5;
-
-    transition:
-        left 0.6s ease,
-        top 0.6s ease,
-        transform 0.3s ease;
-
-    box-shadow:
-        0 4px 10px
-        rgba(0, 0, 0, 0.2);
-}
-
-.court-player:hover {
-    transform: scale(1.06);
-}
-
-.player-number {
-    font-size: 27px;
-    font-weight: bold;
-}
-
-.player-name {
-    max-width: 90px;
-
-    font-size: 13px;
-    font-weight: bold;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
-}
-
-.player-role {
-    font-size: 11px;
-
-    margin-top: 3px;
-
-    color: #555;
-}
-
-
-/* =========================================
-   COURT POSITIONS
-   ========================================= */
-
-.pos4 {
-    left: calc(20% - 40px);
-    top: calc(20% - 40px);
-}
-
-.pos3 {
-    left: calc(50% - 40px);
-    top: calc(20% - 40px);
-}
-
-.pos2 {
-    left: calc(80% - 40px);
-    top: calc(20% - 40px);
-}
-
-.pos5 {
-    left: calc(20% - 40px);
-    top: calc(65% - 40px);
-}
-
-.pos6 {
-    left: calc(50% - 40px);
-    top: calc(75% - 40px);
-}
-
-.pos1 {
-    left: calc(80% - 40px);
-    top: calc(65% - 40px);
-}
+let players = [
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+];
+
+
+let jerseyNums = [
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+];
+
+
+let libero = {
+    name: "",
+    jersey: ""
+};
 
 
 /* =========================================
    LIBERO
    ========================================= */
 
-.court-player.libero-player {
-    border: 5px solid #555;
-    background: #f5f5f5;
+let usingLibero = false;
+
+let liberoState = {
+    active: false,
+    replacedMiddle: null
+};
+
+
+/* =========================================
+   ROTATION
+   ========================================= */
+
+let courtPos = [];
+
+let rotationNumber = 1;
+
+
+/* =========================================
+   SCORE
+   ========================================= */
+
+let teamAScore = 0;
+
+let teamBScore = 0;
+
+let setsWonA = 0;
+
+let setsWonB = 0;
+
+let currentSet = 1;
+
+let servingTeam = "A";
+
+
+/* =========================================
+   NAVIGATION
+   ========================================= */
+
+function hideAllScreens() {
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(screen => {
+            screen.classList.add("hidden");
+        });
+}
+
+
+function goHome() {
+
+    hideAllScreens();
+
+    document
+        .getElementById("homeScreen")
+        .classList.remove("hidden");
 }
 
 
 /* =========================================
-   COURT CONTROLS
+   ROTATION SETUP
    ========================================= */
 
-.court-controls {
-    display: flex;
+function openRotationSetup() {
 
-    justify-content: center;
+    hideAllScreens();
 
-    gap: 10px;
+    document
+        .getElementById("systemScreen")
+        .classList.remove("hidden");
 
-    flex-wrap: wrap;
-
-    margin-top: 20px;
+    document
+        .getElementById("systemScreen")
+        .dataset.mode = "rotation";
 }
 
-.court-controls button {
-    background: #222;
-    color: white;
+
+function openPlayerSetup() {
+
+    hideAllScreens();
+
+    document
+        .getElementById("systemScreen")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("systemScreen")
+        .dataset.mode = "players";
 }
 
-.animation-info {
-    text-align: center;
 
-    margin-top: 15px;
+function chooseSystem(selectedSystem) {
 
-    padding: 12px;
+    system = selectedSystem;
 
-    background: white;
+    if (system === 5) {
 
-    border-radius: 8px;
+        positions = [...positions51];
+
+    } else {
+
+        positions = [...positions62];
+
+    }
+
+
+    const mode =
+        document
+            .getElementById("systemScreen")
+            .dataset.mode;
+
+
+    if (mode === "rotation") {
+
+        hideAllScreens();
+
+        document
+            .getElementById("rotationSetupScreen")
+            .classList.remove("hidden");
+
+
+        document
+            .getElementById("selectedSystemText")
+            .textContent =
+                `Selected system: ${
+                    system === 5
+                        ? "5–1"
+                        : "6–2"
+                }`;
+
+    } else {
+
+        openPlayerInputs();
+
+    }
 }
 
 
 /* =========================================
-   SERVE RECEIVE / MOVEMENT ANIMATION
+   LIBERO SELECTION
    ========================================= */
 
-.serve-receive .court-player {
-    transform: scale(0.98);
-    cursor: pointer;
+function setLiberoUsage(value) {
+
+    usingLibero = value;
+
+
+    const yesButton =
+        document.getElementById(
+            "liberoYesButton"
+        );
+
+
+    const noButton =
+        document.getElementById(
+            "liberoNoButton"
+        );
+
+
+    if (value) {
+
+        yesButton.style.opacity = "1";
+
+        noButton.style.opacity = "0.5";
+
+    } else {
+
+        yesButton.style.opacity = "0.5";
+
+        noButton.style.opacity = "1";
+
+    }
 }
 
-.serve-receive .court-player:hover {
-    transform: scale(1.06);
+
+/* =========================================
+   PLAYER INPUT
+   ========================================= */
+
+function openPlayerInputs() {
+
+    hideAllScreens();
+
+    document
+        .getElementById(
+            "playerSetupScreen"
+        )
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById(
+            "playerSystemText"
+        )
+        .textContent =
+            `Player setup for the ${
+                system === 5
+                    ? "5–1"
+                    : "6–2"
+            } system.`;
+
+
+    const container =
+        document.getElementById(
+            "playerInputs"
+        );
+
+
+    container.innerHTML = "";
+
+
+    for (let i = 0; i < 6; i++) {
+
+        const row =
+            document.createElement("div");
+
+
+        row.className =
+            "player-row";
+
+
+        row.innerHTML = `
+
+            <input
+                id="player-${i}"
+                type="text"
+                placeholder="${positions[i]}"
+                value="${players[i]}"
+            >
+
+            <input
+                id="jersey-${i}"
+                type="number"
+                placeholder="#"
+                value="${jerseyNums[i]}"
+            >
+
+        `;
+
+
+        container.appendChild(row);
+    }
+
+
+    const liberoContainer =
+        document.getElementById(
+            "liberoInputContainer"
+        );
+
+
+    liberoContainer.innerHTML = `
+
+        <label>
+            Libero
+        </label>
+
+        <div class="player-row">
+
+            <input
+                id="libero-name"
+                type="text"
+                placeholder="Libero"
+                value="${libero.name}"
+            >
+
+            <input
+                id="libero-jersey"
+                type="number"
+                placeholder="#"
+                value="${libero.jersey}"
+            >
+
+        </div>
+
+    `;
 }
 
-.court-player.movement-ghost {
-    position: absolute;
 
-    opacity: 0.32;
+function savePlayers() {
 
-    pointer-events: none;
+    for (let i = 0; i < 6; i++) {
 
-    z-index: 20;
+        players[i] =
+            document
+                .getElementById(
+                    `player-${i}`
+                )
+                .value
+                .trim();
 
-    border-style: dashed;
 
-    box-shadow:
-        0 2px 8px
-        rgba(0, 0, 0, 0.12);
+        jerseyNums[i] =
+            document
+                .getElementById(
+                    `jersey-${i}`
+                )
+                .value
+                .trim();
+    }
 
-    transform: none;
 
-    transition: none;
+    libero.name =
+        document
+            .getElementById(
+                "libero-name"
+            )
+            .value
+            .trim();
+
+
+    libero.jersey =
+        document
+            .getElementById(
+                "libero-jersey"
+            )
+            .value
+            .trim();
+
+
+    localStorage.setItem(
+        "volleyballPlayers",
+        JSON.stringify(players)
+    );
+
+
+    localStorage.setItem(
+        "volleyballJerseys",
+        JSON.stringify(jerseyNums)
+    );
+
+
+    localStorage.setItem(
+        "volleyballLibero",
+        JSON.stringify(libero)
+    );
+
+
+    alert("Players saved!");
+
+    goHome();
 }
 
-.movement-active .court-player {
-    transition:
-        left 1.2s ease-in-out,
-        top 1.2s ease-in-out,
-        transform 0.2s ease;
+
+/* =========================================
+   LOAD SAVED PLAYERS
+   ========================================= */
+
+function loadSavedPlayers() {
+
+    const savedPlayers =
+        localStorage.getItem(
+            "volleyballPlayers"
+        );
+
+
+    const savedJerseys =
+        localStorage.getItem(
+            "volleyballJerseys"
+        );
+
+
+    const savedLibero =
+        localStorage.getItem(
+            "volleyballLibero"
+        );
+
+
+    if (savedPlayers) {
+
+        players =
+            JSON.parse(savedPlayers);
+
+    }
+
+
+    if (savedJerseys) {
+
+        jerseyNums =
+            JSON.parse(savedJerseys);
+
+    }
+
+
+    if (savedLibero) {
+
+        libero =
+            JSON.parse(savedLibero);
+
+    }
 }
 
-.movement-active .court-player:hover {
-    transform: scale(1.06);
+
+/* =========================================
+   START ROTATION
+   ========================================= */
+
+function startRotation() {
+
+    const setterPosition =
+        parseInt(
+            document
+                .getElementById(
+                    "setterPosition"
+                )
+                .value
+        );
+
+
+    courtPos = [];
+
+
+    serveReceiveActive = false;
+
+    movementActive = false;
+
+    removeMovementGhosts();
+
+
+    for (let x = 0; x < 6; x++) {
+
+        const index =
+            (
+                setterPosition -
+                1 -
+                x +
+                600
+            ) % 6;
+
+
+        courtPos.push(index);
+    }
+
+
+    /*
+        The rotation number is the setter's CURRENT
+        court position, not a counter that increases
+        every time the Rotate button is pressed.
+    */
+    rotationNumber =
+        getCurrentRotationNumber();
+
+
+    liberoState.active = false;
+
+    liberoState.replacedMiddle = null;
+
+
+    if (usingLibero) {
+
+        updateLibero();
+
+    }
+
+
+    hideAllScreens();
+
+
+    document
+        .getElementById(
+            "rotationScreen"
+        )
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById(
+            "rotationSystemTitle"
+        )
+        .textContent =
+            `${
+                system === 5
+                    ? "5–1"
+                    : "6–2"
+            } Rotation`;
+
+
+    displayCourt();
+}
+
+
+/* =========================================
+   LIBERO LOGIC
+   ========================================= */
+
+function updateLibero() {
+
+    if (!usingLibero) {
+
+        liberoState.active = false;
+
+        liberoState.replacedMiddle = null;
+
+        return;
+    }
+
+
+    /*
+        Back row:
+
+        Position 1
+        Position 5
+        Position 6
+
+        Array indexes:
+
+        0, 4, 5
+    */
+
+    const backRow = [0, 4, 5];
+
+
+    /*
+        Check whether the middle currently
+        being replaced has reached the
+        front row.
+    */
+
+    if (
+        liberoState.active &&
+        liberoState.replacedMiddle !== null
+    ) {
+
+        const middlePosition =
+            courtPos.indexOf(
+                liberoState.replacedMiddle
+            );
+
+
+        if (
+            middlePosition !== -1 &&
+            !backRow.includes(
+                middlePosition
+            )
+        ) {
+
+            liberoState.active = false;
+
+            liberoState.replacedMiddle = null;
+        }
+    }
+
+
+    /*
+        Look for a middle blocker in the
+        back row.
+    */
+
+    if (!liberoState.active) {
+
+        for (
+            let i = 0;
+            i < courtPos.length;
+            i++
+        ) {
+
+            const playerIndex =
+                courtPos[i];
+
+
+            const role =
+                positions[playerIndex];
+
+
+            const isMiddle =
+                role === "Middle 1" ||
+                role === "Middle 2";
+
+
+            if (
+                backRow.includes(i) &&
+                isMiddle
+            ) {
+
+                liberoState.active = true;
+
+                liberoState.replacedMiddle =
+                    playerIndex;
+
+                break;
+            }
+        }
+    }
+}
+
+
+/* =========================================
+   CURRENT ROTATION NUMBER
+   ========================================= */
+
+/*
+    The number shown in the corner represents
+    the setter's CURRENT court position.
+
+    5–1:
+        There is one setter, so the number is
+        wherever that setter currently is.
+
+    6–2:
+        There are two setters. The rotation number
+        follows whichever setter is currently in
+        the back row (positions 5, 6, or 1).
+*/
+function getCurrentRotationNumber() {
+
+    if (courtPos.length !== 6) {
+        return 1;
+    }
+
+
+    const backRow =
+        [0, 4, 5];
+
+
+    if (system === 6) {
+
+        /*
+            In a 6–2, only the setter in the
+            back row is the active setter.
+        */
+        for (const positionIndex of backRow) {
+
+            const playerIndex =
+                courtPos[positionIndex];
+
+
+            const role =
+                positions[playerIndex];
+
+
+            if (
+                role === "Setter 1" ||
+                role === "Setter 2"
+            ) {
+
+                return positionIndex + 1;
+            }
+        }
+
+    } else {
+
+        /*
+            In a 5–1 there is only one setter.
+        */
+        for (
+            let positionIndex = 0;
+            positionIndex < courtPos.length;
+            positionIndex++
+        ) {
+
+            const playerIndex =
+                courtPos[positionIndex];
+
+
+            if (
+                positions[playerIndex] ===
+                "Setter"
+            ) {
+
+                return positionIndex + 1;
+            }
+        }
+    }
+
+
+    /*
+        Fallback if the setup does not currently
+        contain the expected setter.
+    */
+    return rotationNumber || 1;
+}
+
+
+/* =========================================
+   ROTATION FORWARD
+   ========================================= */
+
+function nextRotation() {
+
+    if (courtPos.length !== 6) {
+        return;
+    }
+
+
+    const first =
+        courtPos.shift();
+
+
+    courtPos.push(first);
+
+
+    /*
+        Recalculate from the setter's actual
+        position after the rotation.
+    */
+    rotationNumber =
+        getCurrentRotationNumber();
+
+
+    updateLibero();
+
+    if (serveReceiveActive) {
+
+        movementActive = false;
+
+        document
+            .querySelector(
+                ".volleyball-court"
+            )
+            .classList.remove(
+                "movement-active"
+            );
+
+        removeMovementGhosts();
+    }
+
+    displayCourt();
+}
+
+
+/* =========================================
+   ROTATION BACKWARD
+   ========================================= */
+
+function previousRotation() {
+
+    if (courtPos.length !== 6) {
+        return;
+    }
+
+
+    const last =
+        courtPos.pop();
+
+
+    courtPos.unshift(last);
+
+
+    /*
+        Recalculate from the setter's actual
+        position after the reverse rotation.
+    */
+    rotationNumber =
+        getCurrentRotationNumber();
+
+
+    updateLibero();
+
+    if (serveReceiveActive) {
+
+        movementActive = false;
+
+        document
+            .querySelector(
+                ".volleyball-court"
+            )
+            .classList.remove(
+                "movement-active"
+            );
+
+        removeMovementGhosts();
+    }
+
+    displayCourt();
+}
+
+
+/* =========================================
+   DISPLAY COURT
+   ========================================= */
+
+function displayCourt() {
+
+    rotationNumber =
+        getCurrentRotationNumber();
+
+
+    const courtElements = {
+
+        1: document.getElementById(
+            "courtPos1"
+        ),
+
+        2: document.getElementById(
+            "courtPos2"
+        ),
+
+        3: document.getElementById(
+            "courtPos3"
+        ),
+
+        4: document.getElementById(
+            "courtPos4"
+        ),
+
+        5: document.getElementById(
+            "courtPos5"
+        ),
+
+        6: document.getElementById(
+            "courtPos6"
+        )
+    };
+
+
+    for (
+        let position = 1;
+        position <= 6;
+        position++
+    ) {
+
+        const element =
+            courtElements[position];
+
+
+        const arrayIndex =
+            position - 1;
+
+
+        const playerIndex =
+            courtPos[arrayIndex];
+
+
+        let displayName =
+            players[playerIndex];
+
+
+        let displayNumber =
+            jerseyNums[playerIndex];
+
+
+        let displayRole =
+            getShortRole(
+                positions[playerIndex]
+            );
+
+
+        let isLibero = false;
+
+
+        /*
+            Display the libero in the
+            middle's court position.
+        */
+
+        if (
+            usingLibero &&
+            liberoState.active &&
+            playerIndex ===
+                liberoState.replacedMiddle
+        ) {
+
+            displayName =
+                libero.name ||
+                "LIB";
+
+
+            displayNumber =
+                libero.jersey ||
+                "";
+
+
+            displayRole = "LIB";
+
+            isLibero = true;
+        }
+
+
+        /*
+            If no name or number has been
+            entered, use the position
+            abbreviation.
+        */
+
+        if (
+            !displayName &&
+            !displayNumber
+        ) {
+
+            displayName =
+                displayRole;
+        }
+
+
+        element.innerHTML = `
+
+            <div class="player-number">
+
+                ${
+                    displayNumber
+                        ? "#" +
+                          escapeHtml(
+                              displayNumber
+                          )
+                        : displayName
+                }
+
+            </div>
+
+
+            ${
+                displayNumber
+                    ? `
+                        <div class="player-name">
+                            ${escapeHtml(
+                                displayName ||
+                                displayRole
+                            )}
+                        </div>
+                    `
+                    : ""
+            }
+
+
+            <div class="player-role">
+                ${displayRole}
+            </div>
+
+        `;
+
+
+        element.classList.toggle(
+            "libero-player",
+            isLibero
+        );
+
+
+        element.dataset.playerIndex =
+            playerIndex;
+
+
+        element.onmouseenter = () => {
+
+            showMovementGhost(
+                element
+            );
+        };
+
+
+        element.onmouseleave = () => {
+
+            hideMovementGhost(
+                element
+            );
+        };
+    }
+
+
+    applyCurrentFormation();
+
+
+    document
+        .getElementById(
+            "rotationCounter"
+        )
+        .textContent =
+            `Rotation ${rotationNumber}`;
+}
+
+
+/* =========================================
+   ROLE ABBREVIATIONS
+   ========================================= */
+
+function getShortRole(role) {
+
+    if (!role) {
+        return "";
+    }
+
+
+    if (
+        role === "Setter" ||
+        role === "Setter 1" ||
+        role === "Setter 2"
+    ) {
+
+        return "S";
+    }
+
+
+    if (
+        role === "Middle 1" ||
+        role === "Middle 2"
+    ) {
+
+        return "MB";
+    }
+
+
+    if (
+        role === "Left Side 1" ||
+        role === "Left Side 2"
+    ) {
+
+        return "LS";
+    }
+
+
+    if (role === "Right Side") {
+
+        return "RS";
+    }
+
+
+    if (role === "Libero") {
+
+        return "LIB";
+    }
+
+
+    return role;
+}
+
+
+/* =========================================
+   ESCAPE HTML
+   ========================================= */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+
+/* =========================================
+   SERVE RECEIVE FORMATIONS
+   ========================================= */
+
+/*
+    The first reference image shows the six
+    serve-receive formations in this order:
+
+        1, 6, 5, 4, 3, 2
+
+    Coordinates are the CENTER of each player
+    circle as percentages of the court.
+*/
+const serveReceiveLayouts = {
+
+    1: {
+        "Right Side":   [12, 27],
+        "Middle 2":     [50, 27],
+        "Left Side 1":  [86, 27],
+        "Left Side 2":  [20, 66],
+        "Middle 1":     [50, 66],
+        "Setter":       [84, 66]
+    },
+
+    6: {
+        "Left Side 2":  [18, 65],
+        "Middle 1":     [50, 67],
+        "Left Side 1":  [80, 67],
+        "Right Side":   [76, 23],
+        "Setter":       [82, 34],
+        "Middle 2":     [84, 49]
+    },
+
+    5: {
+        "Middle 1":     [18, 28],
+        "Setter":       [50, 28],
+        "Right Side":   [82, 28],
+        "Left Side 2":  [18, 67],
+        "Left Side 1":  [50, 67],
+        "Middle 2":     [82, 67]
+    },
+
+    4: {
+        "Setter":       [18, 27],
+        "Middle 1":     [24, 40],
+        "Left Side 2":  [18, 67],
+        "Left Side 1":  [50, 70],
+        "Middle 2":     [78, 67],
+        "Right Side":   [84, 82]
+    },
+
+    3: {
+        "Middle 1":     [18, 28],
+        "Setter":       [50, 28],
+        /*
+            Right Side is the lighthouse between
+            Positions 1 and 6, on the baseline.
+        */
+        "Right Side":   [70, 90],
+        "Left Side 2":  [18, 67],
+        "Left Side 1":  [50, 70],
+        "Middle 2":     [82, 67]
+    },
+
+    2: {
+        "Middle 2":     [18, 28],
+        "Setter":       [78, 28],
+        "Middle 1":     [78, 67],
+        "Left Side 1":  [18, 67],
+        "Left Side 2":  [50, 70],
+        /*
+            Right Side is the lighthouse between
+            Positions 5 and 6, on the baseline.
+        */
+        "Right Side":   [35, 90]
+    }
+};
+
+
+/*
+    Ending/home-base positions from the user's
+    second reference image and instructions.
+
+    Front-row home positions:
+        Left Side       -> Position 4
+        Middle          -> Position 3
+        Setter          -> Position 2
+        Right Side /
+        other 6–2 setter -> between 1 and 2,
+                            near the attack line
+
+    Back-row home positions:
+        Left Side       -> Position 6, deep toward
+                           the baseline
+        Libero / Middle -> between positions 4 and 5,
+                           near the attack line
+
+    These are role-based destinations rather than
+    simply sending each player back to the same
+    numbered court position.
+*/
+const baseCourtCoordinates = {
+
+    leftSideFront: [20, 20],
+
+    middleFront: [50, 20],
+
+    setter: [80, 20],
+
+    rightSideFront: [80, 45],
+
+    leftSideBack: [24, 70],
+
+    liberoMiddleBack: [20, 45],
+
+    /*
+        The back-row Right Side home base is the
+        horizontal mirror of the back-row Left Side
+        home base.
+    */
+    rightSideBack: [76, 70]
+};
+
+
+let serveReceiveActive = false;
+let movementActive = false;
+
+
+/* =========================================
+   ACTIVE 6–2 SETTER
+   ========================================= */
+
+function getActiveSetterIndex() {
+
+    if (system === 5) {
+
+        for (let i = 0; i < courtPos.length; i++) {
+
+            const playerIndex = courtPos[i];
+
+            if (
+                positions[playerIndex] ===
+                "Setter"
+            ) {
+                return playerIndex;
+            }
+        }
+
+        return -1;
+    }
+
+
+    /*
+        In a 6–2 the active setter is whichever
+        Setter 1 / Setter 2 is currently in the
+        back row: positions 1, 5, or 6.
+    */
+    const backRow = [0, 4, 5];
+
+    for (const positionIndex of backRow) {
+
+        const playerIndex =
+            courtPos[positionIndex];
+
+        const role =
+            positions[playerIndex];
+
+        if (
+            role === "Setter 1" ||
+            role === "Setter 2"
+        ) {
+            return playerIndex;
+        }
+    }
+
+    return -1;
+}
+
+
+/* =========================================
+   SERVE RECEIVE ROLE
+   ========================================= */
+
+function getServeReceiveRole(playerIndex) {
+
+    const role =
+        positions[playerIndex];
+
+
+    if (system === 5) {
+        return role;
+    }
+
+
+    /*
+        In a 6–2, the back-row setter uses
+        the Setter serve-receive position.
+
+        The other setter is the front-row
+        setter and uses the Right Side position.
+    */
+    if (
+        role === "Setter 1" ||
+        role === "Setter 2"
+    ) {
+
+        const activeSetter =
+            getActiveSetterIndex();
+
+        if (
+            playerIndex === activeSetter
+        ) {
+            return "Setter";
+        }
+
+        return "Right Side";
+    }
+
+    return role;
+}
+
+
+/* =========================================
+   POSITION HELPERS
+   ========================================= */
+
+function setPlayerCenterPercent(
+    element,
+    xPercent,
+    yPercent
+) {
+
+    /*
+        Calculate the center using the actual court
+        pixel dimensions. This avoids the small
+        left offset that can appear on mobile when
+        percentage positioning meets the court border.
+    */
+    const court =
+        element.closest(".volleyball-court");
+
+    if (!court) {
+        return;
+    }
+
+    const half =
+        element.offsetWidth / 2;
+
+    const x =
+        court.clientWidth *
+        xPercent /
+        100;
+
+    const y =
+        court.clientHeight *
+        yPercent /
+        100;
+
+    element.style.right = "auto";
+
+    element.style.left =
+        `${x - half}px`;
+
+    element.style.top =
+        `${y - half}px`;
+}
+
+
+function getBaseCoordinatesForPlayer(
+    playerIndex
+) {
+
+    const courtPosition =
+        courtPos.indexOf(playerIndex) + 1;
+
+    if (
+        courtPosition < 1 ||
+        courtPosition > 6
+    ) {
+        return null;
+    }
+
+    const backRow =
+        [1, 5, 6];
+
+    const isBackRow =
+        backRow.includes(courtPosition);
+
+    /*
+        In 6–2, getServeReceiveRole already
+        identifies the active setter as S and
+        the other setter as RS.
+    */
+    const role =
+        getServeReceiveRole(playerIndex);
+
+
+    /*
+        A libero replaces the back-row middle.
+        The court element still represents the
+        middle player, so explicitly send that
+        element to the libero/middle destination.
+    */
+    if (
+        usingLibero &&
+        liberoState.active &&
+        playerIndex ===
+            liberoState.replacedMiddle &&
+        isBackRow
+    ) {
+        return baseCourtCoordinates.liberoMiddleBack;
+    }
+
+
+    if (
+        role === "Left Side 1" ||
+        role === "Left Side 2"
+    ) {
+
+        if (isBackRow) {
+            return baseCourtCoordinates.leftSideBack;
+        }
+
+        return baseCourtCoordinates.leftSideFront;
+    }
+
+
+    if (
+        role === "Middle 1" ||
+        role === "Middle 2"
+    ) {
+
+        if (isBackRow) {
+            return baseCourtCoordinates.liberoMiddleBack;
+        }
+
+        return baseCourtCoordinates.middleFront;
+    }
+
+
+    if (role === "Setter") {
+        return baseCourtCoordinates.setter;
+    }
+
+
+    if (role === "Right Side") {
+
+        if (isBackRow) {
+            return baseCourtCoordinates.rightSideBack;
+        }
+
+        return baseCourtCoordinates.rightSideFront;
+    }
+
+
+    return null;
+}
+
+
+function setPlayerToBase(
+    element,
+    playerIndex
+) {
+
+    const coordinates =
+        getBaseCoordinatesForPlayer(
+            playerIndex
+        );
+
+    if (!coordinates) {
+        return;
+    }
+
+    setPlayerCenterPercent(
+        element,
+        coordinates[0],
+        coordinates[1]
+    );
+}
+
+
+function getServeReceiveCoordinates(
+    playerIndex
+) {
+
+    const rotation =
+        getCurrentRotationNumber();
+
+    const layout =
+        serveReceiveLayouts[rotation];
+
+    if (!layout) {
+        return null;
+    }
+
+    const role =
+        getServeReceiveRole(playerIndex);
+
+
+    /*
+        A back-row Right Side is the "lighthouse":
+        keep them deep at the bottom baseline instead
+        of using the normal serve-receive spot.
+    */
+    const courtPosition =
+        courtPos.indexOf(playerIndex) + 1;
+
+    const isBackRow =
+        [1, 5, 6].includes(courtPosition);
+
+    if (
+        role === "Right Side" &&
+        isBackRow &&
+        !layout["Right Side"]
+    ) {
+        return [76, 90];
+    }
+
+
+    return layout[role] || null;
+}
+
+
+function setPlayerToServeReceive(
+    element,
+    playerIndex
+) {
+
+    const coordinates =
+        getServeReceiveCoordinates(playerIndex);
+
+    if (!coordinates) {
+        return;
+    }
+
+    setPlayerCenterPercent(
+        element,
+        coordinates[0],
+        coordinates[1]
+    );
+}
+
+
+/* =========================================
+   GHOST CLEANUP
+   ========================================= */
+
+function removeMovementGhosts() {
+
+    document
+        .querySelectorAll(".movement-ghost")
+        .forEach(ghost => {
+            ghost.remove();
+        });
+}
+
+
+function hideMovementGhost(element) {
+
+    if (element._movementAnimation) {
+
+        element._movementAnimation.cancel();
+
+        element._movementAnimation = null;
+    }
+
+    if (element._movementGhost) {
+
+        element._movementGhost.remove();
+
+        element._movementGhost = null;
+    }
+}
+
+
+/* =========================================
+   HOVER MOVEMENT GHOST
+   ========================================= */
+
+function showMovementGhost(element) {
+
+    if (
+        !serveReceiveActive ||
+        movementActive
+    ) {
+        return;
+    }
+
+
+    removeMovementGhosts();
+
+
+    const playerIndex =
+        parseInt(
+            element.dataset.playerIndex
+        );
+
+
+    if (Number.isNaN(playerIndex)) {
+        return;
+    }
+
+
+    const court =
+        document.querySelector(
+            ".volleyball-court"
+        );
+
+
+    const startCoordinates =
+        getServeReceiveCoordinates(
+            playerIndex
+        );
+
+
+    const endCoordinates =
+        getBaseCoordinatesForPlayer(
+            playerIndex
+        );
+
+
+    if (
+        !startCoordinates ||
+        !endCoordinates
+    ) {
+        return;
+    }
+
+
+    const ghost =
+        element.cloneNode(true);
+
+
+    ghost.classList.add(
+        "movement-ghost"
+    );
+
+
+    ghost.removeAttribute("id");
+
+
+    ghost.style.width =
+        `${element.offsetWidth}px`;
+
+    ghost.style.height =
+        `${element.offsetHeight}px`;
+
+
+    /*
+        Use the actual player's current pixel
+        position as the beginning of the ghost.
+    */
+    const startX =
+        element.offsetLeft +
+        element.offsetWidth / 2;
+
+    const startY =
+        element.offsetTop +
+        element.offsetHeight / 2;
+
+
+    const endX =
+        court.clientWidth *
+        endCoordinates[0] /
+        100;
+
+    const endY =
+        court.clientHeight *
+        endCoordinates[1] /
+        100;
+
+
+    const dx =
+        endX - startX;
+
+    const dy =
+        endY - startY;
+
+    const distance =
+        Math.max(
+            1,
+            Math.hypot(dx, dy)
+        );
+
+
+    /*
+        A small bend makes the ghost visibly
+        follow a movement path rather than simply
+        jumping/sliding directly to the endpoint.
+    */
+    const bend =
+        Math.min(
+            55,
+            Math.max(
+                20,
+                distance * 0.18
+            )
+        );
+
+
+    const direction =
+        playerIndex % 2 === 0
+            ? 1
+            : -1;
+
+
+    const midpointX =
+        (startX + endX) / 2 +
+        (-dy / distance) *
+        bend *
+        direction;
+
+    const midpointY =
+        (startY + endY) / 2 +
+        (dx / distance) *
+        bend *
+        direction;
+
+
+    const half =
+        ghost.offsetWidth / 2;
+
+
+    ghost.style.left =
+        `${startX - half}px`;
+
+    ghost.style.top =
+        `${startY - half}px`;
+
+
+    court.appendChild(ghost);
+
+
+    const animation =
+        ghost.animate(
+            [
+                {
+                    left:
+                        `${startX - half}px`,
+                    top:
+                        `${startY - half}px`,
+                    opacity: 0.18
+                },
+                {
+                    left:
+                        `${midpointX - half}px`,
+                    top:
+                        `${midpointY - half}px`,
+                    opacity: 0.34
+                },
+                {
+                    left:
+                        `${endX - half}px`,
+                    top:
+                        `${endY - half}px`,
+                    opacity: 0.32
+                }
+            ],
+            {
+                duration: 1200,
+                easing: "ease-in-out",
+                fill: "forwards"
+            }
+        );
+
+
+    element._movementGhost = ghost;
+    element._movementAnimation = animation;
+}
+
+
+/* =========================================
+   APPLY CURRENT FORMATION
+   ========================================= */
+
+function applyCurrentFormation() {
+
+    for (
+        let position = 1;
+        position <= 6;
+        position++
+    ) {
+
+        const element =
+            document.getElementById(
+                `courtPos${position}`
+            );
+
+        if (!element) {
+            continue;
+        }
+
+        const playerIndex =
+            courtPos[position - 1];
+
+        if (
+            serveReceiveActive &&
+            !movementActive
+        ) {
+
+            setPlayerToServeReceive(
+                element,
+                playerIndex
+            );
+
+        } else {
+
+            setPlayerToBase(
+                element,
+                playerIndex
+            );
+        }
+    }
+}
+
+
+/* =========================================
+   SERVE RECEIVE
+   ========================================= */
+
+function toggleServeReceive() {
+
+    const court =
+        document.querySelector(
+            ".volleyball-court"
+        );
+
+
+    removeMovementGhosts();
+
+    movementActive = false;
+
+    court.classList.remove(
+        "movement-active"
+    );
+
+
+    serveReceiveActive =
+        !serveReceiveActive;
+
+
+    if (serveReceiveActive) {
+
+        applyCurrentFormation();
+
+
+        document
+            .getElementById(
+                "animationText"
+            )
+            .textContent =
+                "Serve receive starting positions shown. Hover over a player to preview their movement.";
+
+        document
+            .getElementById(
+                "animationInfo"
+            )
+            .classList.remove(
+                "hidden"
+            );
+
+    } else {
+
+        applyCurrentFormation();
+
+
+        document
+            .getElementById(
+                "animationInfo"
+            )
+            .classList.add(
+                "hidden"
+            );
+    }
+}
+
+
+/* =========================================
+   MOVEMENT
+   ========================================= */
+
+function toggleMovement() {
+
+    const court =
+        document.querySelector(
+            ".volleyball-court"
+        );
+
+
+    removeMovementGhosts();
+
+
+    /*
+        If Show Movement is pressed before
+        Serve Receive, use the correct starting
+        formation first.
+    */
+    if (
+        !serveReceiveActive &&
+        !movementActive
+    ) {
+
+        serveReceiveActive = true;
+
+        applyCurrentFormation();
+    }
+
+
+    movementActive =
+        !movementActive;
+
+
+    court.classList.toggle(
+        "movement-active",
+        movementActive
+    );
+
+
+    if (movementActive) {
+
+        /*
+            All six players are sent to their
+            ending positions in the same frame,
+            so they begin together.
+        */
+        requestAnimationFrame(
+            () => {
+                applyCurrentFormation();
+            }
+        );
+
+
+        document
+            .getElementById(
+                "animationText"
+            )
+            .textContent =
+                "All players are moving to their base positions.";
+
+        document
+            .getElementById(
+                "animationInfo"
+            )
+            .classList.remove(
+                "hidden"
+            );
+
+    } else {
+
+        applyCurrentFormation();
+
+
+        document
+            .getElementById(
+                "animationText"
+            )
+            .textContent =
+                "Serve receive starting positions shown. Hover over a player to preview their movement.";
+
+        document
+            .getElementById(
+                "animationInfo"
+            )
+            .classList.remove(
+                "hidden"
+            );
+    }
 }
 
 
@@ -576,376 +1970,360 @@ select {
    ========================================= */
 
 
-.score-screen {
-    max-width: 1200px;
-    margin: 0 auto;
-}
+function openScorekeeper() {
+
+    hideAllScreens();
+
+    document
+        .getElementById(
+            "scoreScreen"
+        )
+        .classList.remove(
+            "hidden"
+        );
 
 
-.score-header {
-    display: grid;
-
-    grid-template-columns:
-        1fr 200px 1fr;
-
-    gap: 20px;
-
-    align-items: center;
-
-    text-align: center;
-
-    background: white;
-
-    border-radius: 15px;
-
-    padding: 20px;
-
-    box-shadow:
-        0 5px 20px
-        rgba(0, 0, 0, 0.12);
-}
-
-
-.team-name-input {
-    width: 90%;
-
-    text-align: center;
-
-    font-size: 22px;
-
-    font-weight: bold;
+    updateScoreDisplay();
 }
 
 
 /* =========================================
-   SCORE BUTTONS
+   ADD POINT
    ========================================= */
 
-.score-buttons {
-    display: grid;
+function addPoint(team) {
 
-    grid-template-columns:
-        1fr 1fr;
+    if (
+        setsWonA >= 3 ||
+        setsWonB >= 3
+    ) {
 
-    gap: 30px;
-
-    margin-top: 25px;
-}
-
-
-.team-score-controls {
-    display: grid;
-
-    grid-template-columns:
-        1fr 130px;
-
-    gap: 12px;
-}
+        return;
+    }
 
 
-/*
-    The large button IS the score.
+    if (team === "A") {
 
-    Team A = red
-    Team B = blue
-*/
+        teamAScore++;
 
-.point-button {
-    min-height: 220px;
+        servingTeam = "A";
 
-    font-size: 100px;
+    } else {
 
-    color: white;
+        teamBScore++;
 
-    font-weight: bold;
-}
-
-.point-button.team-a {
-    background: #c62828;
-}
-
-.point-button.team-b {
-    background: #1565c0;
+        servingTeam = "B";
+    }
 
 
-/* Make the score easy to read */
-    text-align: center;
+    updateScoreDisplay();
 
-    user-select: none;
-}
-
-
-/*
-    Minus buttons stay as -1.
-*/
-
-.minus-button {
-    min-height: 220px;
-
-    font-size: 40px;
-
-    background: #555;
-
-    color: white;
+    checkSetWinner();
 }
 
 
 /* =========================================
-   SCORE MESSAGE
+   REMOVE POINT
    ========================================= */
 
-.set-message {
-    text-align: center;
+function removePoint(team) {
 
-    min-height: 40px;
+    if (team === "A") {
 
-    margin: 20px 0;
+        if (teamAScore > 0) {
 
-    font-size: 20px;
+            teamAScore--;
+        }
 
-    font-weight: bold;
-}
+    } else {
+
+        if (teamBScore > 0) {
+
+            teamBScore--;
+        }
+    }
 
 
-.score-options {
-    display: flex;
-
-    justify-content: center;
-
-    gap: 10px;
-
-    flex-wrap: wrap;
-}
-
-.score-options button {
-    background: #333;
-    color: white;
-}
-
-.score-options .back-button {
-    width: auto;
+    updateScoreDisplay();
 }
 
 
 /* =========================================
-   FOOTER
+   CHECK SET WINNER
    ========================================= */
 
-footer {
-    display: flex;
+function checkSetWinner() {
 
-    justify-content: center;
-
-    gap: 20px;
-
-    padding: 20px;
-
-    color: #777;
-}
+    const pointsNeeded =
+        currentSet === 5
+            ? 15
+            : 25;
 
 
-/* =========================================
-   LANDSCAPE
-   ========================================= */
+    if (
+        teamAScore >= pointsNeeded &&
+        teamAScore - teamBScore >= 2
+    ) {
 
-@media screen and (orientation: landscape) {
+        finishSet("A");
 
-    .score-screen {
-        padding-bottom: 10px;
+        return;
     }
 
-    .score-header {
-        padding: 10px 12px;
-    }
 
-    .point-button,
-    .minus-button {
-        min-height: 150px;
-    }
+    if (
+        teamBScore >= pointsNeeded &&
+        teamBScore - teamAScore >= 2
+    ) {
 
-    .point-button {
-        font-size: 75px;
-    }
-
-    .minus-button {
-        font-size: 35px;
+        finishSet("B");
     }
 }
 
 
 /* =========================================
-   MOBILE
+   FINISH SET
    ========================================= */
 
-@media (max-width: 700px) {
+function finishSet(winner) {
 
-    .volleyball-court {
-        box-shadow: 0 0 0 12px #3fa9ad;
+    if (winner === "A") {
+
+        setsWonA++;
+
+    } else {
+
+        setsWonB++;
     }
 
-    .top-bar h1 {
-        font-size: 19px;
+
+    const teamAName =
+        document
+            .getElementById(
+                "teamAName"
+            )
+            .value ||
+        "Team A";
+
+
+    const teamBName =
+        document
+            .getElementById(
+                "teamBName"
+            )
+            .value ||
+        "Team B";
+
+
+    const winnerName =
+        winner === "A"
+            ? teamAName
+            : teamBName;
+
+
+    if (
+        setsWonA >= 3 ||
+        setsWonB >= 3
+    ) {
+
+        document
+            .getElementById(
+                "setMessage"
+            )
+            .textContent =
+                `${winnerName} won the match!`;
+
+
+        updateScoreDisplay();
+
+        return;
     }
 
-    .top-bar p {
-        font-size: 12px;
-    }
 
-    main {
-        padding: 15px;
-    }
+    document
+        .getElementById(
+            "setMessage"
+        )
+        .textContent =
+            `${winnerName} won the set. Next set starting.`;
 
-    .menu-card,
-    .setup-card {
-        padding: 22px;
-        margin: 15px auto;
-    }
 
-    .system-buttons {
-        grid-template-columns: 1fr;
-    }
+    currentSet++;
 
-    .rotation-header {
-        flex-direction: column;
+    teamAScore = 0;
 
-        gap: 15px;
+    teamBScore = 0;
 
-        align-items: stretch;
-    }
 
-    .rotation-header h2 {
-        text-align: center;
-    }
-    .volleyball-court {
-        width: min(100%, 500px);
-        aspect-ratio: 1 / 1;
-        height: auto;
-    }
+    updateScoreDisplay();
+}
 
-    .court-player {
-        width: 80px;
-        height: 80px;
-    }
+
+/* =========================================
+   SCORE DISPLAY
+   ========================================= */
+
+function updateScoreDisplay() {
+
+    const teamAName =
+        document
+            .getElementById(
+                "teamAName"
+            )
+            .value ||
+        "Team A";
+
+
+    const teamBName =
+        document
+            .getElementById(
+                "teamBName"
+            )
+            .value ||
+        "Team B";
+
 
     /*
-        Positions 3 and 6 are centered by the
-        JavaScript pixel-centering routine.
-    */
-    #courtPos3,
-    #courtPos6 {
-        margin-left: 0;
-    }
+        =====================================
+        IMPORTANT VERSION 1.8 CHANGE
+        =====================================
 
+        The large red/blue buttons now show
+        the CURRENT SCORE.
 
-    .player-number {
-        font-size: 20px;
-    }
+        So if Team A has 14 points:
 
-    .player-name {
-        max-width: 65px;
-        font-size: 10px;
-    }
+                    [ 14 ]
 
-    .score-header {
-        grid-template-columns:
-            1fr 1fr;
+        Clicking it makes it:
 
-        gap: 10px;
-    }
-
-    .match-information {
-        grid-column: 1 / -1;
-        grid-row: 2;
-    }
-
-    /*
-        Large score buttons on mobile.
+                    [ 15 ]
     */
 
-    .score-buttons {
-        gap: 10px;
-    }
+    document
+        .getElementById(
+            "teamAScoreButton"
+        )
+        .textContent =
+            teamAScore;
 
-    .team-score-controls {
-        grid-template-columns: 1fr;
-    }
 
-    .point-button {
-        min-height: 170px;
-        font-size: 75px;
-    }
+    document
+        .getElementById(
+            "teamBScoreButton"
+        )
+        .textContent =
+            teamBScore;
 
-    .minus-button {
-        min-height: 65px;
-        font-size: 30px;
-    }
 
+    document
+        .getElementById(
+            "currentSet"
+        )
+        .textContent =
+            currentSet;
+
+
+    document
+        .getElementById(
+            "setsScore"
+        )
+        .textContent =
+            `${setsWonA} - ${setsWonB}`;
+
+
+    document
+        .getElementById(
+            "servingTeam"
+        )
+        .textContent =
+            servingTeam === "A"
+                ? teamAName
+                : teamBName;
 }
 
 
 /* =========================================
-   VERSION 1.8
-   MOBILE LANDSCAPE SCOREKEEPER
+   RESET SET
    ========================================= */
 
-@media screen and (orientation: landscape) and (max-height: 700px) {
+function resetSet() {
 
-    #scoreScreen {
-        padding: 8px 10px 4px;
-    }
+    teamAScore = 0;
 
-    #scoreScreen .score-header {
-        padding: 6px 10px;
-        margin-bottom: 6px;
-    }
+    teamBScore = 0;
 
-    #scoreScreen .team-name-input {
-        font-size: 18px;
-    }
 
-    #scoreScreen .match-information {
-        font-size: 13px;
-    }
+    document
+        .getElementById(
+            "setMessage"
+        )
+        .textContent = "";
 
-    #scoreScreen .score-buttons {
-        gap: 8px;
-        margin-top: 6px;
-        height: calc(100vh - 135px);
-        height: calc(100dvh - 135px);
-    }
 
-    #scoreScreen .team-score-controls {
-        grid-template-columns: minmax(0, 1fr) 52px;
-        gap: 5px;
-        height: 100%;
-    }
-
-    #scoreScreen .point-button {
-        min-height: 0;
-        height: 100%;
-        font-size: clamp(80px, 20vw, 170px);
-        padding: 0;
-    }
-
-    #scoreScreen .minus-button {
-        min-height: 0;
-        height: 100%;
-        font-size: 28px;
-        padding: 0;
-    }
-
-    #scoreScreen .set-message,
-    #scoreScreen .score-options {
-        margin-top: 5px;
-        margin-bottom: 0;
-    }
-
-    #scoreScreen .score-options {
-        gap: 5px;
-    }
-
-    #scoreScreen .score-options button {
-        padding: 7px 10px;
-        font-size: 13px;
-    }
+    updateScoreDisplay();
 }
+
+
+/* =========================================
+   RESET MATCH
+   ========================================= */
+
+function resetMatch() {
+
+    teamAScore = 0;
+
+    teamBScore = 0;
+
+    setsWonA = 0;
+
+    setsWonB = 0;
+
+    currentSet = 1;
+
+    servingTeam = "A";
+
+
+    document
+        .getElementById(
+            "setMessage"
+        )
+        .textContent = "";
+
+
+    updateScoreDisplay();
+}
+
+
+/* =========================================
+   TEAM NAME UPDATES
+   ========================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        loadSavedPlayers();
+
+
+        document
+            .getElementById(
+                "teamAName"
+            )
+            .addEventListener(
+                "input",
+                updateScoreDisplay
+            );
+
+
+        document
+            .getElementById(
+                "teamBName"
+            )
+            .addEventListener(
+                "input",
+                updateScoreDisplay
+            );
+
+    }
+);
