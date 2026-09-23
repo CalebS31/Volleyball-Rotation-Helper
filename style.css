@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 2.0
+   VERSION 2.1
    ========================================= */
 
 * {
@@ -827,10 +827,15 @@ footer {
         height: 80px;
     }
 
-    .pos3,
-    .pos6 {
-        margin-left: -40px;
+    /*
+        Positions 3 and 6 are centered by the
+        JavaScript pixel-centering routine.
+    */
+    #courtPos3,
+    #courtPos6 {
+        margin-left: 0;
     }
+
 
     .player-number {
         font-size: 20px;
