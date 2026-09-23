@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 1.9
+   VERSION 2.0
    ========================================= */
 
 
@@ -477,6 +477,13 @@ function startRotation() {
     courtPos = [];
 
 
+    serveReceiveActive = false;
+
+    movementActive = false;
+
+    removeMovementGhosts();
+
+
     for (let x = 0; x < 6; x++) {
 
         const index =
@@ -759,6 +766,21 @@ function nextRotation() {
 
     updateLibero();
 
+    if (serveReceiveActive) {
+
+        movementActive = false;
+
+        document
+            .querySelector(
+                ".volleyball-court"
+            )
+            .classList.remove(
+                "movement-active"
+            );
+
+        removeMovementGhosts();
+    }
+
     displayCourt();
 }
 
@@ -790,6 +812,21 @@ function previousRotation() {
 
 
     updateLibero();
+
+    if (serveReceiveActive) {
+
+        movementActive = false;
+
+        document
+            .querySelector(
+                ".volleyball-court"
+            )
+            .classList.remove(
+                "movement-active"
+            );
+
+        removeMovementGhosts();
+    }
 
     displayCourt();
 }
@@ -953,7 +990,30 @@ function displayCourt() {
             "libero-player",
             isLibero
         );
+
+
+        element.dataset.playerIndex =
+            playerIndex;
+
+
+        element.onmouseenter = () => {
+
+            showMovementGhost(
+                element
+            );
+        };
+
+
+        element.onmouseleave = () => {
+
+            hideMovementGhost(
+                element
+            );
+        };
     }
+
+
+    applyCurrentFormation();
 
 
     document
@@ -1036,6 +1096,555 @@ function escapeHtml(value) {
 
 
 /* =========================================
+   SERVE RECEIVE FORMATIONS
+   ========================================= */
+
+/*
+    The first reference image shows the six
+    serve-receive formations in this order:
+
+        1, 6, 5, 4, 3, 2
+
+    Coordinates are the CENTER of each player
+    circle as percentages of the court.
+*/
+const serveReceiveLayouts = {
+
+    1: {
+        "Right Side":   [12, 27],
+        "Middle 2":     [50, 27],
+        "Left Side 1":  [86, 27],
+        "Left Side 2":  [20, 66],
+        "Middle 1":     [50, 66],
+        "Setter":       [84, 66]
+    },
+
+    6: {
+        "Left Side 2":  [18, 65],
+        "Middle 1":     [50, 67],
+        "Left Side 1":  [80, 67],
+        "Right Side":   [76, 23],
+        "Setter":       [82, 34],
+        "Middle 2":     [84, 49]
+    },
+
+    5: {
+        "Middle 1":     [18, 28],
+        "Setter":       [50, 28],
+        "Right Side":   [82, 28],
+        "Left Side 2":  [18, 67],
+        "Left Side 1":  [50, 67],
+        "Middle 2":     [82, 67]
+    },
+
+    4: {
+        "Setter":       [18, 27],
+        "Middle 1":     [24, 40],
+        "Left Side 2":  [18, 67],
+        "Left Side 1":  [50, 70],
+        "Middle 2":     [78, 67],
+        "Right Side":   [84, 82]
+    },
+
+    3: {
+        "Middle 1":     [18, 28],
+        "Setter":       [50, 28],
+        "Right Side":   [82, 28],
+        "Left Side 2":  [18, 67],
+        "Left Side 1":  [50, 70],
+        "Middle 2":     [82, 67]
+    },
+
+    2: {
+        "Middle 2":     [18, 28],
+        "Setter":       [78, 28],
+        "Middle 1":     [78, 67],
+        "Left Side 1":  [18, 67],
+        "Left Side 2":  [50, 70],
+        "Right Side":   [40, 84]
+    }
+};
+
+
+/*
+    Fixed ending/base positions from the second
+    reference image.
+
+    4 = left front
+    3 = middle front
+    2 = right front
+    5 = left back
+    6 = middle back
+    1 = right back
+*/
+const baseCourtCoordinates = {
+    1: [80, 65],
+    2: [80, 20],
+    3: [50, 20],
+    4: [20, 20],
+    5: [20, 65],
+    6: [50, 75]
+};
+
+
+let serveReceiveActive = false;
+let movementActive = false;
+
+
+/* =========================================
+   ACTIVE 6–2 SETTER
+   ========================================= */
+
+function getActiveSetterIndex() {
+
+    if (system === 5) {
+
+        for (let i = 0; i < courtPos.length; i++) {
+
+            const playerIndex = courtPos[i];
+
+            if (
+                positions[playerIndex] ===
+                "Setter"
+            ) {
+                return playerIndex;
+            }
+        }
+
+        return -1;
+    }
+
+
+    /*
+        In a 6–2 the active setter is whichever
+        Setter 1 / Setter 2 is currently in the
+        back row: positions 1, 5, or 6.
+    */
+    const backRow = [0, 4, 5];
+
+    for (const positionIndex of backRow) {
+
+        const playerIndex =
+            courtPos[positionIndex];
+
+        const role =
+            positions[playerIndex];
+
+        if (
+            role === "Setter 1" ||
+            role === "Setter 2"
+        ) {
+            return playerIndex;
+        }
+    }
+
+    return -1;
+}
+
+
+/* =========================================
+   SERVE RECEIVE ROLE
+   ========================================= */
+
+function getServeReceiveRole(playerIndex) {
+
+    const role =
+        positions[playerIndex];
+
+
+    if (system === 5) {
+        return role;
+    }
+
+
+    /*
+        In a 6–2, the back-row setter uses
+        the Setter serve-receive position.
+
+        The other setter is the front-row
+        setter and uses the Right Side position.
+    */
+    if (
+        role === "Setter 1" ||
+        role === "Setter 2"
+    ) {
+
+        const activeSetter =
+            getActiveSetterIndex();
+
+        if (
+            playerIndex === activeSetter
+        ) {
+            return "Setter";
+        }
+
+        return "Right Side";
+    }
+
+    return role;
+}
+
+
+/* =========================================
+   POSITION HELPERS
+   ========================================= */
+
+function setPlayerCenterPercent(
+    element,
+    xPercent,
+    yPercent
+) {
+
+    const half =
+        element.offsetWidth / 2;
+
+    element.style.right = "auto";
+
+    element.style.left =
+        `calc(${xPercent}% - ${half}px)`;
+
+    element.style.top =
+        `calc(${yPercent}% - ${half}px)`;
+}
+
+
+function setPlayerToBase(
+    element,
+    courtPosition
+) {
+
+    const coordinates =
+        baseCourtCoordinates[courtPosition];
+
+    if (!coordinates) {
+        return;
+    }
+
+    setPlayerCenterPercent(
+        element,
+        coordinates[0],
+        coordinates[1]
+    );
+}
+
+
+function getServeReceiveCoordinates(
+    playerIndex
+) {
+
+    const rotation =
+        getCurrentRotationNumber();
+
+    const layout =
+        serveReceiveLayouts[rotation];
+
+    if (!layout) {
+        return null;
+    }
+
+    const role =
+        getServeReceiveRole(playerIndex);
+
+    return layout[role] || null;
+}
+
+
+function setPlayerToServeReceive(
+    element,
+    playerIndex
+) {
+
+    const coordinates =
+        getServeReceiveCoordinates(playerIndex);
+
+    if (!coordinates) {
+        return;
+    }
+
+    setPlayerCenterPercent(
+        element,
+        coordinates[0],
+        coordinates[1]
+    );
+}
+
+
+/* =========================================
+   GHOST CLEANUP
+   ========================================= */
+
+function removeMovementGhosts() {
+
+    document
+        .querySelectorAll(".movement-ghost")
+        .forEach(ghost => {
+            ghost.remove();
+        });
+}
+
+
+function hideMovementGhost(element) {
+
+    if (element._movementAnimation) {
+
+        element._movementAnimation.cancel();
+
+        element._movementAnimation = null;
+    }
+
+    if (element._movementGhost) {
+
+        element._movementGhost.remove();
+
+        element._movementGhost = null;
+    }
+}
+
+
+/* =========================================
+   HOVER MOVEMENT GHOST
+   ========================================= */
+
+function showMovementGhost(element) {
+
+    if (
+        !serveReceiveActive ||
+        movementActive
+    ) {
+        return;
+    }
+
+
+    removeMovementGhosts();
+
+
+    const playerIndex =
+        parseInt(
+            element.dataset.playerIndex
+        );
+
+
+    if (Number.isNaN(playerIndex)) {
+        return;
+    }
+
+
+    const court =
+        document.querySelector(
+            ".volleyball-court"
+        );
+
+
+    const startCoordinates =
+        getServeReceiveCoordinates(
+            playerIndex
+        );
+
+
+    const position =
+        courtPos.indexOf(playerIndex) + 1;
+
+
+    const endCoordinates =
+        baseCourtCoordinates[position];
+
+
+    if (
+        !startCoordinates ||
+        !endCoordinates
+    ) {
+        return;
+    }
+
+
+    const ghost =
+        element.cloneNode(true);
+
+
+    ghost.classList.add(
+        "movement-ghost"
+    );
+
+
+    ghost.removeAttribute("id");
+
+
+    ghost.style.width =
+        `${element.offsetWidth}px`;
+
+    ghost.style.height =
+        `${element.offsetHeight}px`;
+
+
+    /*
+        Use the actual player's current pixel
+        position as the beginning of the ghost.
+    */
+    const startX =
+        element.offsetLeft +
+        element.offsetWidth / 2;
+
+    const startY =
+        element.offsetTop +
+        element.offsetHeight / 2;
+
+
+    const endX =
+        court.clientWidth *
+        endCoordinates[0] /
+        100;
+
+    const endY =
+        court.clientHeight *
+        endCoordinates[1] /
+        100;
+
+
+    const dx =
+        endX - startX;
+
+    const dy =
+        endY - startY;
+
+    const distance =
+        Math.max(
+            1,
+            Math.hypot(dx, dy)
+        );
+
+
+    /*
+        A small bend makes the ghost visibly
+        follow a movement path rather than simply
+        jumping/sliding directly to the endpoint.
+    */
+    const bend =
+        Math.min(
+            55,
+            Math.max(
+                20,
+                distance * 0.18
+            )
+        );
+
+
+    const direction =
+        playerIndex % 2 === 0
+            ? 1
+            : -1;
+
+
+    const midpointX =
+        (startX + endX) / 2 +
+        (-dy / distance) *
+        bend *
+        direction;
+
+    const midpointY =
+        (startY + endY) / 2 +
+        (dx / distance) *
+        bend *
+        direction;
+
+
+    const half =
+        ghost.offsetWidth / 2;
+
+
+    ghost.style.left =
+        `${startX - half}px`;
+
+    ghost.style.top =
+        `${startY - half}px`;
+
+
+    court.appendChild(ghost);
+
+
+    const animation =
+        ghost.animate(
+            [
+                {
+                    left:
+                        `${startX - half}px`,
+                    top:
+                        `${startY - half}px`,
+                    opacity: 0.18
+                },
+                {
+                    left:
+                        `${midpointX - half}px`,
+                    top:
+                        `${midpointY - half}px`,
+                    opacity: 0.34
+                },
+                {
+                    left:
+                        `${endX - half}px`,
+                    top:
+                        `${endY - half}px`,
+                    opacity: 0.32
+                }
+            ],
+            {
+                duration: 1200,
+                easing: "ease-in-out",
+                fill: "forwards"
+            }
+        );
+
+
+    element._movementGhost = ghost;
+    element._movementAnimation = animation;
+}
+
+
+/* =========================================
+   APPLY CURRENT FORMATION
+   ========================================= */
+
+function applyCurrentFormation() {
+
+    for (
+        let position = 1;
+        position <= 6;
+        position++
+    ) {
+
+        const element =
+            document.getElementById(
+                `courtPos${position}`
+            );
+
+        if (!element) {
+            continue;
+        }
+
+        const playerIndex =
+            courtPos[position - 1];
+
+        if (
+            serveReceiveActive &&
+            !movementActive
+        ) {
+
+            setPlayerToServeReceive(
+                element,
+                playerIndex
+            );
+
+        } else {
+
+            setPlayerToBase(
+                element,
+                position
+            );
+        }
+    }
+}
+
+
+/* =========================================
    SERVE RECEIVE
    ========================================= */
 
@@ -1047,41 +1656,51 @@ function toggleServeReceive() {
         );
 
 
-    court.classList.toggle(
-        "serve-receive"
+    removeMovementGhosts();
+
+    movementActive = false;
+
+    court.classList.remove(
+        "movement-active"
     );
 
 
-    const info =
-        document.getElementById(
-            "animationInfo"
-        );
+    serveReceiveActive =
+        !serveReceiveActive;
 
 
-    const text =
-        document.getElementById(
-            "animationText"
-        );
+    if (serveReceiveActive) {
+
+        applyCurrentFormation();
 
 
-    if (
-        court.classList.contains(
-            "serve-receive"
-        )
-    ) {
+        document
+            .getElementById(
+                "animationText"
+            )
+            .textContent =
+                "Serve receive starting positions shown. Hover over a player to preview their movement.";
 
-        text.textContent =
-            "Serve receive positions shown.";
-
-        info.classList.remove(
-            "hidden"
-        );
+        document
+            .getElementById(
+                "animationInfo"
+            )
+            .classList.remove(
+                "hidden"
+            );
 
     } else {
 
-        info.classList.add(
-            "hidden"
-        );
+        applyCurrentFormation();
+
+
+        document
+            .getElementById(
+                "animationInfo"
+            )
+            .classList.add(
+                "hidden"
+            );
     }
 }
 
@@ -1098,41 +1717,83 @@ function toggleMovement() {
         );
 
 
+    removeMovementGhosts();
+
+
+    /*
+        If Show Movement is pressed before
+        Serve Receive, use the correct starting
+        formation first.
+    */
+    if (
+        !serveReceiveActive &&
+        !movementActive
+    ) {
+
+        serveReceiveActive = true;
+
+        applyCurrentFormation();
+    }
+
+
+    movementActive =
+        !movementActive;
+
+
     court.classList.toggle(
-        "movement-active"
+        "movement-active",
+        movementActive
     );
 
 
-    const info =
-        document.getElementById(
-            "animationInfo"
+    if (movementActive) {
+
+        /*
+            All six players are sent to their
+            ending positions in the same frame,
+            so they begin together.
+        */
+        requestAnimationFrame(
+            () => {
+                applyCurrentFormation();
+            }
         );
 
 
-    const text =
-        document.getElementById(
-            "animationText"
-        );
+        document
+            .getElementById(
+                "animationText"
+            )
+            .textContent =
+                "All players are moving to their base positions.";
 
-
-    if (
-        court.classList.contains(
-            "movement-active"
-        )
-    ) {
-
-        text.textContent =
-            "Player movement after the serve is being shown.";
-
-        info.classList.remove(
-            "hidden"
-        );
+        document
+            .getElementById(
+                "animationInfo"
+            )
+            .classList.remove(
+                "hidden"
+            );
 
     } else {
 
-        info.classList.add(
-            "hidden"
-        );
+        applyCurrentFormation();
+
+
+        document
+            .getElementById(
+                "animationText"
+            )
+            .textContent =
+                "Serve receive starting positions shown. Hover over a player to preview their movement.";
+
+        document
+            .getElementById(
+                "animationInfo"
+            )
+            .classList.remove(
+                "hidden"
+            );
     }
 }
 
@@ -1140,6 +1801,7 @@ function toggleMovement() {
 /* =========================================
    SCOREKEEPER
    ========================================= */
+
 
 function openScorekeeper() {
 
