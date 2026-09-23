@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 2.0
+   VERSION 2.1
    ========================================= */
 
 
@@ -1167,23 +1167,47 @@ const serveReceiveLayouts = {
 
 
 /*
-    Fixed ending/base positions from the second
-    reference image.
+    Ending/home-base positions from the user's
+    second reference image and instructions.
 
-    4 = left front
-    3 = middle front
-    2 = right front
-    5 = left back
-    6 = middle back
-    1 = right back
+    Front-row home positions:
+        Left Side       -> Position 4
+        Middle          -> Position 3
+        Setter          -> Position 2
+        Right Side /
+        other 6–2 setter -> between 1 and 2,
+                            near the attack line
+
+    Back-row home positions:
+        Left Side       -> Position 6, deep toward
+                           the baseline
+        Libero / Middle -> between positions 4 and 5,
+                           near the attack line
+
+    These are role-based destinations rather than
+    simply sending each player back to the same
+    numbered court position.
 */
 const baseCourtCoordinates = {
-    1: [80, 65],
-    2: [80, 20],
-    3: [50, 20],
-    4: [20, 20],
-    5: [20, 65],
-    6: [50, 75]
+
+    leftSideFront: [20, 20],
+
+    middleFront: [50, 20],
+
+    setter: [80, 20],
+
+    rightSideFront: [80, 45],
+
+    leftSideBack: [50, 75],
+
+    liberoMiddleBack: [20, 45],
+
+    /*
+        A back-row Right Side acts as the
+        "lighthouse" in serve receive and
+        stays deep at the baseline.
+    */
+    rightSideBack: [84, 90]
 };
 
 
@@ -1295,26 +1319,142 @@ function setPlayerCenterPercent(
     yPercent
 ) {
 
+    /*
+        Calculate the center using the actual court
+        pixel dimensions. This avoids the small
+        left offset that can appear on mobile when
+        percentage positioning meets the court border.
+    */
+    const court =
+        element.closest(".volleyball-court");
+
+    if (!court) {
+        return;
+    }
+
     const half =
         element.offsetWidth / 2;
+
+    const x =
+        court.clientWidth *
+        xPercent /
+        100;
+
+    const y =
+        court.clientHeight *
+        yPercent /
+        100;
 
     element.style.right = "auto";
 
     element.style.left =
-        `calc(${xPercent}% - ${half}px)`;
+        `${x - half}px`;
 
     element.style.top =
-        `calc(${yPercent}% - ${half}px)`;
+        `${y - half}px`;
+}
+
+
+function getBaseCoordinatesForPlayer(
+    playerIndex
+) {
+
+    const courtPosition =
+        courtPos.indexOf(playerIndex) + 1;
+
+    if (
+        courtPosition < 1 ||
+        courtPosition > 6
+    ) {
+        return null;
+    }
+
+    const backRow =
+        [1, 5, 6];
+
+    const isBackRow =
+        backRow.includes(courtPosition);
+
+    /*
+        In 6–2, getServeReceiveRole already
+        identifies the active setter as S and
+        the other setter as RS.
+    */
+    const role =
+        getServeReceiveRole(playerIndex);
+
+
+    /*
+        A libero replaces the back-row middle.
+        The court element still represents the
+        middle player, so explicitly send that
+        element to the libero/middle destination.
+    */
+    if (
+        usingLibero &&
+        liberoState.active &&
+        playerIndex ===
+            liberoState.replacedMiddle &&
+        isBackRow
+    ) {
+        return baseCourtCoordinates.liberoMiddleBack;
+    }
+
+
+    if (
+        role === "Left Side 1" ||
+        role === "Left Side 2"
+    ) {
+
+        if (isBackRow) {
+            return baseCourtCoordinates.leftSideBack;
+        }
+
+        return baseCourtCoordinates.leftSideFront;
+    }
+
+
+    if (
+        role === "Middle 1" ||
+        role === "Middle 2"
+    ) {
+
+        if (isBackRow) {
+            return baseCourtCoordinates.liberoMiddleBack;
+        }
+
+        return baseCourtCoordinates.middleFront;
+    }
+
+
+    if (role === "Setter") {
+        return baseCourtCoordinates.setter;
+    }
+
+
+    if (role === "Right Side") {
+
+        if (isBackRow) {
+            return baseCourtCoordinates.rightSideBack;
+        }
+
+        return baseCourtCoordinates.rightSideFront;
+    }
+
+
+    return null;
 }
 
 
 function setPlayerToBase(
     element,
-    courtPosition
+    playerIndex
 ) {
 
     const coordinates =
-        baseCourtCoordinates[courtPosition];
+        getBaseCoordinatesForPlayer(
+            playerIndex
+        );
 
     if (!coordinates) {
         return;
@@ -1344,6 +1484,26 @@ function getServeReceiveCoordinates(
 
     const role =
         getServeReceiveRole(playerIndex);
+
+
+    /*
+        A back-row Right Side is the "lighthouse":
+        keep them deep at the bottom baseline instead
+        of using the normal serve-receive spot.
+    */
+    const courtPosition =
+        courtPos.indexOf(playerIndex) + 1;
+
+    const isBackRow =
+        [1, 5, 6].includes(courtPosition);
+
+    if (
+        role === "Right Side" &&
+        isBackRow
+    ) {
+        return [84, 90];
+    }
+
 
     return layout[role] || null;
 }
@@ -1441,12 +1601,10 @@ function showMovementGhost(element) {
         );
 
 
-    const position =
-        courtPos.indexOf(playerIndex) + 1;
-
-
     const endCoordinates =
-        baseCourtCoordinates[position];
+        getBaseCoordinatesForPlayer(
+            playerIndex
+        );
 
 
     if (
@@ -1637,7 +1795,7 @@ function applyCurrentFormation() {
 
             setPlayerToBase(
                 element,
-                position
+                playerIndex
             );
         }
     }
