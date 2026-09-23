@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 2.1
+   VERSION 1.12
    ========================================= */
 
 
@@ -1149,7 +1149,11 @@ const serveReceiveLayouts = {
     3: {
         "Middle 1":     [18, 28],
         "Setter":       [50, 28],
-        "Right Side":   [82, 28],
+        /*
+            Right Side is the lighthouse between
+            Positions 1 and 6, on the baseline.
+        */
+        "Right Side":   [70, 90],
         "Left Side 2":  [18, 67],
         "Left Side 1":  [50, 70],
         "Middle 2":     [82, 67]
@@ -1161,7 +1165,11 @@ const serveReceiveLayouts = {
         "Middle 1":     [78, 67],
         "Left Side 1":  [18, 67],
         "Left Side 2":  [50, 70],
-        "Right Side":   [40, 84]
+        /*
+            Right Side is the lighthouse between
+            Positions 5 and 6, on the baseline.
+        */
+        "Right Side":   [35, 90]
     }
 };
 
@@ -1198,16 +1206,16 @@ const baseCourtCoordinates = {
 
     rightSideFront: [80, 45],
 
-    leftSideBack: [50, 75],
+    leftSideBack: [24, 70],
 
     liberoMiddleBack: [20, 45],
 
     /*
-        A back-row Right Side acts as the
-        "lighthouse" in serve receive and
-        stays deep at the baseline.
+        The back-row Right Side home base is the
+        horizontal mirror of the back-row Left Side
+        home base.
     */
-    rightSideBack: [84, 90]
+    rightSideBack: [76, 70]
 };
 
 
@@ -1499,9 +1507,10 @@ function getServeReceiveCoordinates(
 
     if (
         role === "Right Side" &&
-        isBackRow
+        isBackRow &&
+        !layout["Right Side"]
     ) {
-        return [84, 90];
+        return [76, 90];
     }
 
 
