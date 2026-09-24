@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 1.12
+   VERSION 1.13
    ========================================= */
 
 
@@ -1206,16 +1206,26 @@ const baseCourtCoordinates = {
 
     rightSideFront: [80, 45],
 
-    leftSideBack: [24, 70],
+    /*
+        Back-row Left Side:
+        centered and most of the way toward
+        the back of the court.
+    */
+    leftSideBack: [50, 75],
 
+    /*
+        Back-row Libero / Middle:
+        near the attack line between positions
+        4 and 5.
+    */
     liberoMiddleBack: [20, 45],
 
     /*
-        The back-row Right Side home base is the
-        horizontal mirror of the back-row Left Side
-        home base.
+        Back-row Right Side:
+        mirrors the Libero / Middle home-base
+        position across the center of the court.
     */
-    rightSideBack: [76, 70]
+    rightSideBack: [80, 45]
 };
 
 
