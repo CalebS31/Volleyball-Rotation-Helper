@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 1.14
+   VERSION 1.16
    ========================================= */
 
 
@@ -1677,17 +1677,71 @@ function getServeReceiveCoordinates(
 
 
     /*
-        5–1 / 6–2 Rotation 1 has a special setter
-        coverage formation: Left Side 1 drops to
-        Position 1 so the setter can leave that
-        passing lane and move to the setting spot.
+        5–1 / 6–2 setter coverage:
+
+        The back-row Left Side is the passer who
+        takes the setter's normal serve-receive spot.
+        The setter then stays beside that Left Side
+        and one step deeper toward the baseline.
+
+        This keeps the Left Side as the passer and
+        prevents the setter from being the lighthouse.
     */
     if (
         system !== 4 &&
-        rotation === 1 &&
-        role === "Left Side 1"
+        isBackRow &&
+        (
+            role === "Left Side 1" ||
+            role === "Left Side 2"
+        )
     ) {
-        return [84, 90];
+        const setterIndex =
+            getActiveSetterIndex();
+
+        if (setterIndex !== -1) {
+            const setterRole =
+                getServeReceiveRole(setterIndex);
+
+            if (setterRole === "Setter") {
+                const setterLayout =
+                    layout["Setter"];
+
+                if (setterLayout) {
+                    return setterLayout;
+                }
+            }
+        }
+    }
+
+
+    /*
+        The 5–1 / 6–2 setter stays just beside the
+        Left Side passer and one step deeper.
+        Move toward the center of the court so the
+        setter stays beside the passer rather than
+        becoming the lighthouse.
+    */
+    if (
+        system !== 4 &&
+        role === "Setter" &&
+        isBackRow
+    ) {
+        const setterLayout =
+            layout["Setter"];
+
+        if (setterLayout) {
+            const sideStep =
+                setterLayout[0] < 50
+                    ? 10
+                    : setterLayout[0] > 50
+                        ? -10
+                        : 10;
+
+            return [
+                Math.max(8, Math.min(92, setterLayout[0] + sideStep)),
+                Math.min(88, setterLayout[1] + 9)
+            ];
+        }
     }
 
 
