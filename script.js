@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 1.16
+   VERSION 1.20
    ========================================= */
 
 
@@ -189,6 +189,9 @@ function chooseSystem(selectedSystem) {
         positions = [...positions42];
 
     }
+
+
+    updateServeReceiverSelectorVisibility();
 
 
     /*
@@ -573,6 +576,17 @@ function startRotation() {
     }
 
 
+    if (system === 5) {
+
+        setDefaultServeReceivers();
+
+        if (!validateServeReceiverSelection()) {
+            alert("Please select between 2 and 4 serve-receive players.");
+            return;
+        }
+    }
+
+
     /*
         The rotation number is the setter's CURRENT
         court position, not a counter that increases
@@ -619,6 +633,9 @@ function startRotation() {
 
 
     displayCourt();
+
+
+    updateServeReceiverSelectorVisibility();
 }
 
 
@@ -1341,6 +1358,182 @@ let movementActive = false;
 
 
 /* =========================================
+   SERVE RECEIVE RECEIVER SELECTION
+   ========================================= */
+
+/*
+    For now, receiver selection is implemented
+    for the 5–1 system only. The user can choose
+    2–4 players. The selection follows the actual
+    player, so it stays with that player as the
+    rotation changes.
+*/
+let selectedServeReceivers = [];
+
+
+function populateServeReceiverSelector() {
+
+    const select =
+        document.getElementById(
+            "serveReceiverSelect"
+        );
+
+    if (!select) {
+        return;
+    }
+
+
+    select.innerHTML = "";
+
+
+    if (system !== 5) {
+        return;
+    }
+
+
+    for (let i = 0; i < 6; i++) {
+
+        const role = positions[i];
+
+        const option =
+            document.createElement("option");
+
+        option.value = String(i);
+
+        option.textContent =
+            players[i]
+                ? `${players[i]} — ${role}`
+                : `Player ${i + 1} — ${role}`;
+
+        if (selectedServeReceivers.includes(i)) {
+            option.selected = true;
+        }
+
+        select.appendChild(option);
+    }
+}
+
+
+function updateSelectedServeReceivers() {
+
+    const select =
+        document.getElementById(
+            "serveReceiverSelect"
+        );
+
+    const message =
+        document.getElementById(
+            "serveReceiverMessage"
+        );
+
+    if (!select || system !== 5) {
+        return;
+    }
+
+
+    const selected =
+        Array.from(select.selectedOptions)
+            .map(option => parseInt(option.value))
+            .filter(index => !Number.isNaN(index));
+
+
+    if (selected.length < 2 || selected.length > 4) {
+
+        if (message) {
+            message.textContent =
+                "Please select between 2 and 4 receivers.";
+        }
+
+        return;
+    }
+
+
+    selectedServeReceivers = selected;
+
+
+    if (message) {
+        message.textContent =
+            `${selected.length} receivers selected.`;
+    }
+
+
+    if (serveReceiveActive && !movementActive) {
+        applyCurrentFormation();
+    }
+}
+
+
+function isSelectedServeReceiver(playerIndex) {
+
+    return selectedServeReceivers.includes(
+        playerIndex
+    );
+}
+
+
+function setDefaultServeReceivers() {
+
+    if (system !== 5) {
+        return;
+    }
+
+
+    /* Start with three non-setters selected. */
+    const nonSetters = [];
+
+    for (let i = 0; i < 6; i++) {
+
+        if (positions[i] !== "Setter") {
+            nonSetters.push(i);
+        }
+    }
+
+
+    if (selectedServeReceivers.length < 2 ||
+        selectedServeReceivers.length > 4) {
+        selectedServeReceivers =
+            nonSetters.slice(0, 3);
+    }
+}
+
+
+function validateServeReceiverSelection() {
+
+    if (system !== 5) {
+        return true;
+    }
+
+
+    const count =
+        selectedServeReceivers.length;
+
+    return count >= 2 && count <= 4;
+}
+
+
+function updateServeReceiverSelectorVisibility() {
+
+    const controls =
+        document.getElementById(
+            "serveReceiverControls"
+        );
+
+    if (!controls) {
+        return;
+    }
+
+
+    if (system === 5) {
+        controls.classList.remove("hidden");
+        populateServeReceiverSelector();
+    } else {
+        controls.classList.add("hidden");
+    }
+}
+
+
+
+/* =========================================
    ACTIVE 6–2 SETTER
    ========================================= */
 
@@ -1637,6 +1830,17 @@ function getServeReceiveCoordinates(
         getServeReceiveRole(playerIndex);
 
 
+    /*
+        5–1 receiver selection: only the players
+        chosen in the dropdown use the serve-receive
+        formation. Everyone else stays at their
+        normal home/base position.
+    */
+    if (system === 5 && !isSelectedServeReceiver(playerIndex)) {
+        return getBaseCoordinatesForPlayer(playerIndex);
+    }
+
+
     const courtPosition =
         courtPos.indexOf(playerIndex) + 1;
 
@@ -1689,9 +1893,10 @@ function getServeReceiveCoordinates(
     */
     if (
         system !== 4 &&
-        role === "Left Side 1" ||
-        system !== 4 &&
-        role === "Left Side 2"
+        (
+            role === "Left Side 1" ||
+            role === "Left Side 2"
+        )
     ) {
         const setterIndex =
             getActiveSetterIndex();
