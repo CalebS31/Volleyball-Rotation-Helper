@@ -493,6 +493,37 @@ select {
 
 
 /* =========================================
+   SERVE RECEIVE PLAYER SELECTION
+   ========================================= */
+
+.serve-receiver-controls {
+    width: min(700px, 100%);
+    margin: 20px auto 0;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.serve-receiver-controls label {
+    margin-top: 0;
+}
+
+#serveReceiverSelect {
+    width: 100%;
+    min-height: 120px;
+    box-sizing: border-box;
+}
+
+.serve-receiver-message {
+    margin: 8px 0 0;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+
+
+/* =========================================
    COURT CONTROLS
    ========================================= */
 
