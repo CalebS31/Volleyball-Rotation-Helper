@@ -1235,12 +1235,22 @@ const serveReceiveLayouts = {
     },
 
     4: {
+        /*
+            4–2 Rotation 4:
+            - Setter in Position 4 is the active/front-row setter.
+            - Setter in Position 1 is the defensive lighthouse.
+            - The two Left Sides pass.
+            - The back-row Middle is replaced by the libero
+              and the libero is the third passer.
+            - The front-row Middle stays out of the passing
+              formation.
+        */
         "Setter":       [18, 27],
-        "Middle 1":     [24, 40],
+        "Middle 1":     [50, 27],
         "Left Side 2":  [18, 67],
-        "Left Side 1":  [50, 70],
-        "Middle 2":     [78, 67],
-        "Right Side":   [84, 82]
+        "Left Side 1":  [82, 67],
+        "Middle 2":     [50, 70],
+        "Right Side":   [84, 90]
     },
 
     3: {
@@ -1632,6 +1642,24 @@ function getServeReceiveCoordinates(
 
     const isBackRow =
         [1, 5, 6].includes(courtPosition);
+
+
+    /*
+        4–2 Rotation 4 has two Left Side passers
+        plus the libero. The back-row Middle is
+        replaced by the libero and must use the
+        center passing lane rather than the normal
+        Middle layout.
+    */
+    if (
+        system === 4 &&
+        rotation === 4 &&
+        usingLibero &&
+        liberoState.active &&
+        playerIndex === liberoState.replacedMiddle
+    ) {
+        return [50, 70];
+    }
 
 
     /*
