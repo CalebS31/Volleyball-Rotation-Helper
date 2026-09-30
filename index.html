@@ -21,7 +21,7 @@
     </div>
 
     <div class="version">
-        v1.18
+        v1.20
     </div>
 </header>
 
@@ -318,6 +318,29 @@
         </div>
 
 
+        <div
+            id="serveReceiverControls"
+            class="serve-receiver-controls hidden"
+        >
+
+            <label for="serveReceiverSelect">
+                5–1 Serve Receive Players
+            </label>
+
+            <select
+                id="serveReceiverSelect"
+                multiple
+                size="4"
+                onchange="updateSelectedServeReceivers()"
+            ></select>
+
+            <p id="serveReceiverMessage" class="serve-receiver-message">
+                Select 2–4 players who will receive serve. Players remain in their rotation order.
+            </p>
+
+        </div>
+
+
         <div class="court-controls">
 
             <button onclick="toggleServeReceive()">
@@ -498,7 +521,7 @@
     </span>
 
     <span>
-        Version 1.18
+        Version 1.20
     </span>
 
 </footer>
