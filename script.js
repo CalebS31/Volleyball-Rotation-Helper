@@ -1679,47 +1679,49 @@ function getServeReceiveCoordinates(
     /*
         5–1 / 6–2 setter coverage:
 
-        The back-row Left Side is the passer who
-        takes the setter's normal serve-receive spot.
-        The setter then stays beside that Left Side
-        and one step deeper toward the baseline.
+        When the active setter is in the back row, the
+        FRONT-ROW Left Side takes the setter's normal
+        serve-receive spot. The back-row Left Side does
+        NOT move and keeps its normal passing position.
 
-        This keeps the Left Side as the passer and
-        prevents the setter from being the lighthouse.
+        This is important because the Left Side who moves
+        up to cover the setter is the front-row Left Side.
     */
     if (
         system !== 4 &&
-        isBackRow &&
-        (
-            role === "Left Side 1" ||
-            role === "Left Side 2"
-        )
+        role === "Left Side 1" ||
+        system !== 4 &&
+        role === "Left Side 2"
     ) {
         const setterIndex =
             getActiveSetterIndex();
 
-        if (setterIndex !== -1) {
-            const setterRole =
-                getServeReceiveRole(setterIndex);
+        const setterCourtPosition =
+            setterIndex === -1
+                ? 0
+                : courtPos.indexOf(setterIndex) + 1;
 
-            if (setterRole === "Setter") {
-                const setterLayout =
-                    layout["Setter"];
+        const setterIsBackRow =
+            [1, 5, 6].includes(setterCourtPosition);
 
-                if (setterLayout) {
-                    return setterLayout;
-                }
+        if (setterIsBackRow && !isBackRow) {
+            const setterLayout =
+                layout["Setter"];
+
+            if (setterLayout) {
+                return setterLayout;
             }
         }
     }
 
 
     /*
-        The 5–1 / 6–2 setter stays just beside the
-        Left Side passer and one step deeper.
-        Move toward the center of the court so the
-        setter stays beside the passer rather than
-        becoming the lighthouse.
+        The 5–1 / 6–2 setter stays beside the front-row
+        Left Side passer and one step behind them.
+
+        The setter moves slightly toward the center of
+        the court and farther toward the baseline from
+        the setter's normal serve-receive spot.
     */
     if (
         system !== 4 &&
