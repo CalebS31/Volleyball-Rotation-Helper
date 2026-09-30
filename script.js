@@ -1732,15 +1732,15 @@ function getServeReceiveCoordinates(
             layout["Setter"];
 
         if (setterLayout) {
-            const sideStep =
-                setterLayout[0] < 50
-                    ? 10
-                    : setterLayout[0] > 50
-                        ? -10
-                        : 10;
+            /*
+                The setter must be TO THE RIGHT of the front-row
+                Left Side passer. Keep the setter on the right-hand
+                side of that passing position in every rotation.
+            */
+            const sideStep = 10;
 
             return [
-                Math.max(8, Math.min(92, setterLayout[0] + sideStep)),
+                Math.min(94, setterLayout[0] + sideStep),
                 Math.min(88, setterLayout[1] + 9)
             ];
         }
