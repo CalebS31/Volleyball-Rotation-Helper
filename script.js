@@ -1,6 +1,6 @@
 /* =========================================
    VOLLEYBALL ROTATION TOOL
-   VERSION 1.13
+   VERSION 1.14
    ========================================= */
 
 
@@ -19,6 +19,21 @@ const positions51 = [
 
 
 const positions62 = [
+    "Setter 1",
+    "Middle 1",
+    "Left Side 2",
+    "Setter 2",
+    "Middle 2",
+    "Left Side 1"
+];
+
+
+/*
+    4–2 uses the same six player roles as 6–2:
+    two setters, two middles, and two left sides.
+    The setter in the front row is the active setter.
+*/
+const positions42 = [
     "Setter 1",
     "Middle 1",
     "Left Side 2",
@@ -165,10 +180,65 @@ function chooseSystem(selectedSystem) {
 
         positions = [...positions51];
 
-    } else {
+    } else if (system === 6) {
 
         positions = [...positions62];
 
+    } else {
+
+        positions = [...positions42];
+
+    }
+
+
+    /*
+        4–2 starting positions are limited to the
+        front row for the active setter: positions
+        4, 3, or 2. The other setter will be in the
+        opposite back-row position and plays defense.
+    */
+    const setterPositionSelect =
+        document.getElementById("setterPosition");
+
+    if (setterPositionSelect) {
+
+        if (system === 4) {
+
+            setterPositionSelect.innerHTML = `
+                <option value="4">
+                    Position 4
+                </option>
+                <option value="3">
+                    Position 3
+                </option>
+                <option value="2">
+                    Position 2
+                </option>
+            `;
+
+        } else {
+
+            setterPositionSelect.innerHTML = `
+                <option value="1">
+                    Position 1
+                </option>
+                <option value="2">
+                    Position 2
+                </option>
+                <option value="3">
+                    Position 3
+                </option>
+                <option value="4">
+                    Position 4
+                </option>
+                <option value="5">
+                    Position 5
+                </option>
+                <option value="6">
+                    Position 6
+                </option>
+            `;
+        }
     }
 
 
@@ -193,7 +263,9 @@ function chooseSystem(selectedSystem) {
                 `Selected system: ${
                     system === 5
                         ? "5–1"
-                        : "6–2"
+                        : system === 6
+                            ? "6–2"
+                            : "4–2"
                 }`;
 
     } else {
@@ -264,7 +336,9 @@ function openPlayerInputs() {
             `Player setup for the ${
                 system === 5
                     ? "5–1"
-                    : "6–2"
+                    : system === 6
+                        ? "6–2"
+                        : "4–2"
             } system.`;
 
 
@@ -538,7 +612,9 @@ function startRotation() {
             `${
                 system === 5
                     ? "5–1"
-                    : "6–2"
+                    : system === 6
+                        ? "6–2"
+                        : "4–2"
             } Rotation`;
 
 
@@ -675,31 +751,52 @@ function getCurrentRotationNumber() {
     }
 
 
-    const backRow =
-        [0, 4, 5];
+    const backRow = [0, 4, 5];
+    const frontRow = [1, 2, 3];
 
 
     if (system === 6) {
 
         /*
-            In a 6–2, only the setter in the
-            back row is the active setter.
+            6–2: the active setter is whichever
+            setter is in the back row.
         */
         for (const positionIndex of backRow) {
 
             const playerIndex =
                 courtPos[positionIndex];
 
-
             const role =
                 positions[playerIndex];
-
 
             if (
                 role === "Setter 1" ||
                 role === "Setter 2"
             ) {
+                return positionIndex + 1;
+            }
+        }
 
+    } else if (system === 4) {
+
+        /*
+            4–2: the active setter is whichever
+            setter is in the front row. The other
+            setter is in the back row and is used
+            for defense / lighthouse.
+        */
+        for (const positionIndex of frontRow) {
+
+            const playerIndex =
+                courtPos[positionIndex];
+
+            const role =
+                positions[playerIndex];
+
+            if (
+                role === "Setter 1" ||
+                role === "Setter 2"
+            ) {
                 return positionIndex + 1;
             }
         }
@@ -707,7 +804,8 @@ function getCurrentRotationNumber() {
     } else {
 
         /*
-            In a 5–1 there is only one setter.
+            5–1: follow the one setter wherever
+            that setter currently is.
         */
         for (
             let positionIndex = 0;
@@ -718,25 +816,18 @@ function getCurrentRotationNumber() {
             const playerIndex =
                 courtPos[positionIndex];
 
-
             if (
                 positions[playerIndex] ===
                 "Setter"
             ) {
-
                 return positionIndex + 1;
             }
         }
     }
 
 
-    /*
-        Fallback if the setup does not currently
-        contain the expected setter.
-    */
     return rotationNumber || 1;
 }
-
 
 /* =========================================
    ROTATION FORWARD
@@ -1113,7 +1204,13 @@ const serveReceiveLayouts = {
     1: {
         "Right Side":   [12, 27],
         "Middle 2":     [50, 27],
-        "Left Side 1":  [86, 27],
+        /*
+            In 5–1 / 6–2 Rotation 1 the setter starts
+            in Position 1. Left Side 1 drops to cover
+            Position 1 so the setter can move freely
+            toward the setting position after the serve.
+        */
+        "Left Side 1":  [84, 90],
         "Left Side 2":  [20, 66],
         "Middle 1":     [50, 66],
         "Setter":       [84, 66]
@@ -1258,13 +1355,15 @@ function getActiveSetterIndex() {
 
 
     /*
-        In a 6–2 the active setter is whichever
-        Setter 1 / Setter 2 is currently in the
-        back row: positions 1, 5, or 6.
+        4–2: the front-row setter is active.
+        6–2: the back-row setter is active.
     */
-    const backRow = [0, 4, 5];
+    const activeRow =
+        system === 4
+            ? [1, 2, 3]
+            : [0, 4, 5];
 
-    for (const positionIndex of backRow) {
+    for (const positionIndex of activeRow) {
 
         const playerIndex =
             courtPos[positionIndex];
@@ -1283,7 +1382,6 @@ function getActiveSetterIndex() {
     return -1;
 }
 
-
 /* =========================================
    SERVE RECEIVE ROLE
    ========================================= */
@@ -1300,11 +1398,37 @@ function getServeReceiveRole(playerIndex) {
 
 
     /*
-        In a 6–2, the back-row setter uses
-        the Setter serve-receive position.
+        In a 4–2 the front-row setter is the active
+        setter and moves to the setting position.
+        The back-row setter is defensive and acts
+        as the lighthouse.
+    */
+    if (system === 4) {
 
-        The other setter is the front-row
-        setter and uses the Right Side position.
+        if (
+            role === "Setter 1" ||
+            role === "Setter 2"
+        ) {
+
+            const activeSetter =
+                getActiveSetterIndex();
+
+            if (playerIndex === activeSetter) {
+                return "Setter";
+            }
+
+            return "Right Side";
+        }
+
+        return role;
+    }
+
+
+    /*
+        In a 6–2, the back-row setter uses the
+        Setter serve-receive position. The other
+        setter is the front-row setter and uses
+        the Right Side position.
     */
     if (
         role === "Setter 1" ||
@@ -1325,7 +1449,6 @@ function getServeReceiveRole(playerIndex) {
 
     return role;
 }
-
 
 /* =========================================
    POSITION HELPERS
@@ -1504,16 +1627,41 @@ function getServeReceiveCoordinates(
         getServeReceiveRole(playerIndex);
 
 
-    /*
-        A back-row Right Side is the "lighthouse":
-        keep them deep at the bottom baseline instead
-        of using the normal serve-receive spot.
-    */
     const courtPosition =
         courtPos.indexOf(playerIndex) + 1;
 
     const isBackRow =
         [1, 5, 6].includes(courtPosition);
+
+
+    /*
+        In a 4–2 the back-row setter is not the
+        setting setter. They play defense and act
+        as the lighthouse at the baseline.
+    */
+    if (
+        system === 4 &&
+        role === "Right Side" &&
+        isBackRow
+    ) {
+        return [50, 90];
+    }
+
+
+    /*
+        5–1 / 6–2 Rotation 1 has a special setter
+        coverage formation: Left Side 1 drops to
+        Position 1 so the setter can leave that
+        passing lane and move to the setting spot.
+    */
+    if (
+        system !== 4 &&
+        rotation === 1 &&
+        role === "Left Side 1"
+    ) {
+        return [84, 90];
+    }
+
 
     if (
         role === "Right Side" &&
@@ -1526,7 +1674,6 @@ function getServeReceiveCoordinates(
 
     return layout[role] || null;
 }
-
 
 function setPlayerToServeReceive(
     element,
